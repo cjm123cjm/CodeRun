@@ -3,9 +3,56 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{6D81AFF1-4ADF-4591-B897-E0A85932187C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{4677CB08-331A-4238-AEC5-2B32D6DFC9F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.AdminApi", "Services\CodeRun.Services.AdminApi\CodeRun.Services.AdminApi.csproj", "{774F92FB-2F6A-460C-89B5-9FA588AC1A08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.AppApi", "Services\CodeRun.Services.AppApi\CodeRun.Services.AppApi.csproj", "{7C67112A-CC39-4755-8D50-1123513FCAF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.Domain", "Services\CodeRun.Services.Domain\CodeRun.Services.Domain.csproj", "{F94B278D-9939-4C08-8444-949CA2B7EE38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeRun.Services.IService", "Services\CodeRun.Services.IService\CodeRun.Services.IService.csproj", "{28614128-BA31-483B-80C9-45C15DE4EAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeRun.Services.Service", "Services\CodeRun.Services.Service\CodeRun.Services.Service.csproj", "{EAD85B48-521D-479E-8902-EF81AD884834}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{774F92FB-2F6A-460C-89B5-9FA588AC1A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{774F92FB-2F6A-460C-89B5-9FA588AC1A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{774F92FB-2F6A-460C-89B5-9FA588AC1A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{774F92FB-2F6A-460C-89B5-9FA588AC1A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C67112A-CC39-4755-8D50-1123513FCAF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C67112A-CC39-4755-8D50-1123513FCAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C67112A-CC39-4755-8D50-1123513FCAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C67112A-CC39-4755-8D50-1123513FCAF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F94B278D-9939-4C08-8444-949CA2B7EE38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F94B278D-9939-4C08-8444-949CA2B7EE38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F94B278D-9939-4C08-8444-949CA2B7EE38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F94B278D-9939-4C08-8444-949CA2B7EE38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28614128-BA31-483B-80C9-45C15DE4EAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28614128-BA31-483B-80C9-45C15DE4EAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28614128-BA31-483B-80C9-45C15DE4EAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28614128-BA31-483B-80C9-45C15DE4EAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAD85B48-521D-479E-8902-EF81AD884834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAD85B48-521D-479E-8902-EF81AD884834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAD85B48-521D-479E-8902-EF81AD884834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD85B48-521D-479E-8902-EF81AD884834}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{774F92FB-2F6A-460C-89B5-9FA588AC1A08} = {6D81AFF1-4ADF-4591-B897-E0A85932187C}
+		{7C67112A-CC39-4755-8D50-1123513FCAF6} = {6D81AFF1-4ADF-4591-B897-E0A85932187C}
+		{F94B278D-9939-4C08-8444-949CA2B7EE38} = {6D81AFF1-4ADF-4591-B897-E0A85932187C}
+		{28614128-BA31-483B-80C9-45C15DE4EAA8} = {6D81AFF1-4ADF-4591-B897-E0A85932187C}
+		{EAD85B48-521D-479E-8902-EF81AD884834} = {6D81AFF1-4ADF-4591-B897-E0A85932187C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B391F9A-C125-44AB-8037-F58B313AAF0A}
