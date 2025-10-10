@@ -70,11 +70,12 @@ namespace CodeRun.Services.Domain.Repository
         /// <param name="expression">条件表达式</param>
         /// <param name="isNoTracking">是否跟踪</param>
         /// <returns></returns>
-        public IQueryable<Entity> QueryWhere(Expression<Func<Entity, bool>> expression, bool isNoTracking)
+        public IQueryable<Entity> QueryWhere(Expression<Func<Entity, bool>>? expression, bool isNoTracking = true)
         {
             var query = isNoTracking ? _dbSet.AsNoTracking() : _dbSet.AsQueryable();
 
-            query = query.Where(expression);
+            if (expression != null)
+                query = query.Where(expression);
 
             return query;
         }
