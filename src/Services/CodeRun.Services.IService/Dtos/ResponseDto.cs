@@ -16,5 +16,26 @@
         public bool IsSuccess { get; set; } = true;
         public string? Message { get; set; } = null;
         public object? Result { get; set; } = null;
+        public ResponseDto()
+        {
+            
+        }
+
+        public ResponseDto(int code, string message)
+        {
+            Code = code;
+            Message = message;
+        }
+
+        public ResponseDto(bool isSuccess, string message)
+        {
+            IsSuccess = isSuccess;
+            Message = message;
+        }
+
+        public ResponseDto(object result)
+        {
+            Result = result;
+        }
     }
 }

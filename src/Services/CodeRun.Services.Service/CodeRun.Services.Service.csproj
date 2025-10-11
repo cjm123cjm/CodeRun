@@ -11,8 +11,4 @@
     <ProjectReference Include="..\CodeRun.Services.IService\CodeRun.Services.IService.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Implementations\" />
-  </ItemGroup>
-
 </Project>

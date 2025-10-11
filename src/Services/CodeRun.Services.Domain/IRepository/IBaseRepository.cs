@@ -20,6 +20,12 @@ namespace CodeRun.Services.Domain.IRepository
         IQueryable<Entity> QueryWhere(Expression<Func<Entity, bool>>? expression, bool isNoTracking = true);
 
         /// <summary>
+        /// 查询数据
+        /// </summary>
+        /// <returns></returns>
+        IQueryable<Entity> Query();
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <param name="entity"></param>

@@ -4,5 +4,11 @@ namespace CodeRun.Services.Domain.IRepository
 {
     public interface IRoleForMenuRepository : IBaseRepository<RoleForMenu>
     {
+        /// <summary>
+        /// 根据角色id获取菜单id
+        /// </summary>
+        /// <param name="roleIds"></param>
+        /// <returns></returns>
+        Task<List<long>> GetMenuIdsByRoleIdAsync(params long[] roleIds);
     }
 }
