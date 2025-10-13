@@ -6,15 +6,10 @@ using CodeRun.Services.IService.Dtos.Inputs;
 using CodeRun.Services.IService.Dtos.Outputs;
 using CodeRun.Services.IService.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeRun.Services.Service.Implementations
+namespace CodeRun.Services.Service.Implements
 {
-    public class MenuService : IMenuService
+    public class MenuService : ServiceBase, IMenuService
     {
         private readonly IMenuRepository _menuRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,16 +28,16 @@ namespace CodeRun.Services.Service.Implementations
         {
             var menus = await _menuRepository.QueryWhere(null).ToListAsync();
 
-            //todo:转成MenuTreeDto
-
-            List<MenuTreeDto> menuTreeDtos = new List<MenuTreeDto>();
-
             menus.Add(new Menu
             {
                 MenuId = 0,
                 ParentId = -1,
                 MenuName = "所有菜单"
             });
+
+            var treeDtos = ObjectMapper.Map<List<MenuTreeDto>>(menus);
+
+            var menuTreeDtos = BuildTreeMenu(treeDtos, -1);
 
             return menuTreeDtos;
         }
@@ -79,7 +74,9 @@ namespace CodeRun.Services.Service.Implementations
                     throw new BusinessException(200, input.PermissionCode + "已存在");
                 }
 
-                //todo:转成model
+                var menu = ObjectMapper.Map<Menu>(input);
+
+                await _menuRepository.AddAsync(menu);
             }
             else
             {
@@ -94,8 +91,8 @@ namespace CodeRun.Services.Service.Implementations
                 {
                     throw new BusinessException(200, "数据不存在");
                 }
-                //todo:转成model
 
+                ObjectMapper.Map(input, menu);
             }
 
             await _unitOfWork.SaveChangesAsync();

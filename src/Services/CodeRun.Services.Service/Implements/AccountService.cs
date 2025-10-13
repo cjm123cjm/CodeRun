@@ -1,0 +1,179 @@
+﻿using CodeRun.Services.Common;
+using CodeRun.Services.Domain.CustomerException;
+using CodeRun.Services.Domain.Entities;
+using CodeRun.Services.Domain.IRepository;
+using CodeRun.Services.Domain.UnitOfWork;
+using CodeRun.Services.IService.Dtos;
+using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Dtos.Outputs;
+using CodeRun.Services.IService.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace CodeRun.Services.Service.Implements
+{
+    public class AccountService : ServiceBase, IAccountService
+    {
+        private readonly IAccountRepository _accountRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+        public AccountService(
+            IAccountRepository accountRepository,
+            IUnitOfWork unitOfWork,
+            IJwtTokenGenerator jwtTokenGenerator)
+        {
+            _accountRepository = accountRepository;
+            _unitOfWork = unitOfWork;
+            _jwtTokenGenerator = jwtTokenGenerator;
+        }
+
+        /// <summary>
+        /// 加载用户数据
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<PageDto<AccountDto>> LoadAccountListAsync(AccountQueryInput queryInput)
+        {
+            var query = _accountRepository.Query().AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(queryInput.UserName))
+            {
+                query = query.Where(t => t.UserName.Contains(queryInput.UserName));
+            }
+            if (!string.IsNullOrWhiteSpace(queryInput.Phone))
+            {
+                query = query.Where(t => t.Phone.Contains(queryInput.Phone));
+            }
+
+            PageDto<AccountDto> pageDto = new PageDto<AccountDto>();
+
+            pageDto.TotalCount = await query.CountAsync();
+            pageDto.PageIndex = queryInput.PageIndex;
+            pageDto.PageSize = queryInput.PageSize;
+
+            var accounts = await query.OrderByDescending(t => t.CreatedTime)
+                                      .Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
+                                      .Take(queryInput.PageSize).ToListAsync();
+
+
+            pageDto.Data = ObjectMapper.Map<List<AccountDto>>(accounts);
+            return pageDto;
+        }
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="loginInput"></param>
+        /// <returns></returns>
+        public async Task<LoginDto> LoginAsync(LoginInput loginInput)
+        {
+            var user = await _accountRepository.QueryWhere(t => t.UserName == loginInput.UserName && t.Password == loginInput.Password).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new BusinessException("用户名密码错误");
+            }
+
+            if (user.Status == 0)
+            {
+                throw new BusinessException("账户已禁用");
+            }
+
+            var accountDto = ObjectMapper.Map<AccountDto>(user);
+
+            var token = _jwtTokenGenerator.GenerateToken(accountDto);
+
+            return new LoginDto { Account = accountDto, Token = token };
+        }
+
+        /// <summary>
+        /// 添加账户信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task AddAccountAsync(AccountAddInput input)
+        {
+            //检查手机号是否存在
+            var phoneCount = await _accountRepository.QueryWhere(t => t.Phone == input.Phone && t.UserId != input.UserId).CountAsync();
+            if (phoneCount != 0)
+            {
+                throw new BusinessException("手机号已存在");
+            }
+
+            var account = ObjectMapper.Map<Account>(input);
+            account.CreatedTime = DateTime.Now;
+            account.UserId = SnowIdWorker.NextId();
+
+            await _accountRepository.AddAsync(account);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 修改账户信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UpdateAccountAsync(AccountUpdateInput input)
+        {
+            //检查手机号是否存在
+            var phoneCount = await _accountRepository.QueryWhere(t => t.Phone == input.Phone && t.UserId != input.UserId).CountAsync();
+            if (phoneCount != 0)
+            {
+                throw new BusinessException("手机号已存在");
+            }
+
+            var account = await _accountRepository.GetByIdAsync(input.UserId);
+            if (account == null)
+            {
+                throw new BusinessException("数据不存在");
+            }
+
+            ObjectMapper.Map(input, account);
+
+            _accountRepository.Update(account);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UpdatePasswordAsync(UpdatePasswordInput input)
+        {
+            var account = await _accountRepository.GetByIdAsync(input.UserId);
+            if (account == null)
+            {
+                throw new BusinessException("数据不存在");
+            }
+
+            if (account.Password != MD5Util.MD5Encrypt(input.OldPassword))
+            {
+                throw new BusinessException("旧密码不正确");
+            }
+
+            account.Password = MD5Util.MD5Encrypt(input.NewPassword);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 修改账户状态
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UpdateAccountStatusAsync(UpdateAccountStatusInput input)
+        {
+            var account = await _accountRepository.GetByIdAsync(input.UserId);
+            if (account == null)
+            {
+                throw new BusinessException("数据不存在");
+            }
+
+            account.Status = input.Status;
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+    }
+}

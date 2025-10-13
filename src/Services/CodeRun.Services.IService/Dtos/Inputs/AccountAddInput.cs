@@ -1,6 +1,6 @@
 ﻿namespace CodeRun.Services.IService.Dtos.Inputs
 {
-    public class AccountAddOrUpdateInput
+    public class AccountAddInput
     {
         /// <summary>
         /// 用户id

@@ -6,38 +6,34 @@ using CodeRun.Services.IService.Dtos.Inputs;
 using CodeRun.Services.IService.Dtos.Outputs;
 using CodeRun.Services.IService.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static Dapper.SqlMapper;
 
-namespace CodeRun.Services.Service.Implementations
+namespace CodeRun.Services.Service.Implements
 {
-    public class RoleService : IRoleService
+    public class RoleService : ServiceBase, IRoleService
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IRoleForMenuRepository _roleForMenuRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAccountRepository _accountRepository;
 
         public RoleService(
             IRoleRepository roleRepository,
             IUnitOfWork unitOfWork,
-            IRoleForMenuRepository roleForMenuRepository)
+            IRoleForMenuRepository roleForMenuRepository,
+            IAccountRepository accountRepository)
         {
             _roleRepository = roleRepository;
             _unitOfWork = unitOfWork;
             _roleForMenuRepository = roleForMenuRepository;
+            _accountRepository = accountRepository;
         }
 
         /// <summary>
-        /// 加载角色类型
+        /// 加载角色列表
         /// </summary>
         /// <param name="queryInput"></param>
         /// <returns></returns>
-        public async Task<List<RoleDto>> LoadRoleList(RoleQueryInput queryInput)
+        public async Task<List<RoleDto>> LoadRoleListAsync(RoleQueryInput queryInput)
         {
             var query = _roleRepository.Query().AsNoTracking();
             if (!string.IsNullOrWhiteSpace(queryInput.RoleName))
@@ -51,8 +47,9 @@ namespace CodeRun.Services.Service.Implementations
 
             var roles = await query.ToListAsync();
 
-            //todo:转成RoleDto
-            return new List<RoleDto>();
+            var roleDtos = ObjectMapper.Map<List<RoleDto>>(roles);
+
+            return roleDtos;
         }
 
         /// <summary>
@@ -71,13 +68,23 @@ namespace CodeRun.Services.Service.Implementations
             if (input.RoleId == 0)
             {
                 //保存数据
+                var role = ObjectMapper.Map<Role>(input);
+                role.RoleId = SnowIdWorker.NextId();
 
                 //保存菜单
                 await SaveRoleMenu(input.RoleId, input.MenuIds, input.HalfMenuIds);
+
+                await _roleRepository.AddAsync(role);
             }
             else
             {
+                var role = await _roleRepository.GetByIdAsync(input.RoleId);
+                if (role == null)
+                {
+                    throw new BusinessException("数据不存在");
+                }
 
+                ObjectMapper.Map(input, role);
             }
 
             await _unitOfWork.SaveChangesAsync();
@@ -165,7 +172,11 @@ namespace CodeRun.Services.Service.Implementations
 
             var menuIds = await _roleForMenuRepository.GetMenuIdsByRoleIdAsync(roleId);
 
-            return new RoleDto { MenuIds = menuIds };
+            var roleDto = ObjectMapper.Map<RoleDto>(role);
+
+            roleDto.MenuIds = menuIds;
+
+            return roleDto;
         }
 
         /// <summary>
@@ -183,7 +194,22 @@ namespace CodeRun.Services.Service.Implementations
             }
 
             //查询该角色有没有用户使用
+            var roleAny = await _accountRepository.QueryWhere(t => t.Status == 1 && t.Roles != null && t.Roles.Contains(roleId.ToString())).AnyAsync();
+            if (roleAny)
+            {
+                throw new BusinessException(message: "该角色正在使用,无法删除");
+            }
 
+            _roleRepository.Delete(role);
+
+            //删除权限菜单
+            var menus = await _roleForMenuRepository.QueryWhere(t => t.RoleId == roleId, true).ToListAsync();
+            if (menus.Any())
+            {
+                _roleForMenuRepository.Delete(menus.ToArray());
+            }
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

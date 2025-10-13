@@ -21,13 +21,34 @@ namespace CodeRun.Services.IService.Interfaces
         /// </summary>
         /// <param name="queryInput"></param>
         /// <returns></returns>
-        Task<PageDto<AccountDto>> LoadAccountList(AccountQueryInput queryInput);
+        Task<PageDto<AccountDto>> LoadAccountListAsync(AccountQueryInput queryInput);
 
         /// <summary>
-        /// 添加/修改账户信息
+        /// 添加账户信息
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task SaveAccountAsync(AccountAddOrUpdateInput input);
+        Task AddAccountAsync(AccountAddInput input);
+
+        /// <summary>
+        /// 修改账户信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateAccountAsync(AccountUpdateInput input);
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdatePasswordAsync(UpdatePasswordInput input);
+
+        /// <summary>
+        /// 修改账户状态
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UpdateAccountStatusAsync(UpdateAccountStatusInput input);
     }
 }

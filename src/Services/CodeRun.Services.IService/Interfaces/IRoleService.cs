@@ -27,7 +27,7 @@ namespace CodeRun.Services.IService.Interfaces
         /// </summary>
         /// <param name="queryInput"></param>
         /// <returns></returns>
-        Task<List<RoleDto>> LoadRoleList(RoleQueryInput queryInput);
+        Task<List<RoleDto>> LoadRoleListAsync(RoleQueryInput queryInput);
 
         /// <summary>
         /// 根据角色id查询菜单

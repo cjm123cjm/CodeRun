@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeRun.Services.Domain\CodeRun.Services.Domain.csproj" />
     <ProjectReference Include="..\CodeRun.Services.IService\CodeRun.Services.IService.csproj" />
   </ItemGroup>
 

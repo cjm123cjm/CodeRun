@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CodeRun.Services.Domain\CodeRun.Services.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CodeRun.Services.AdminApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MenuController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         }
 
         /// <summary>
-        /// 加载菜单树
+        /// 加载完成菜单树结构
         /// </summary>
         /// <returns></returns>
         [HttpGet]
