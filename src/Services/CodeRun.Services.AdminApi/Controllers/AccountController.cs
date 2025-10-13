@@ -137,5 +137,17 @@ namespace CodeRun.Services.AdminApi.Controllers
 
             return new ResponseDto();
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public async Task<ResponseDto> DeleteAccountAsync(long accountId)
+        {
+            await _accountService.DeleteAccountAsync(accountId);
+
+            return new ResponseDto();
+        }
     }
 }

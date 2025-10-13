@@ -14,17 +14,20 @@ namespace CodeRun.Services.Service.Implements
     public class AccountService : ServiceBase, IAccountService
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
         public AccountService(
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
-            IJwtTokenGenerator jwtTokenGenerator)
+            IJwtTokenGenerator jwtTokenGenerator,
+            IRoleRepository roleRepository)
         {
             _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _roleRepository = roleRepository;
         }
 
         /// <summary>
@@ -55,8 +58,19 @@ namespace CodeRun.Services.Service.Implements
                                       .Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
                                       .Take(queryInput.PageSize).ToListAsync();
 
+            var accountDtos = ObjectMapper.Map<List<AccountDto>>(accounts);
+            //查询角色名称
+            foreach (var item in accountDtos)
+            {
+                if (item.Roles != null)
+                {
+                    var roleIds = item.Roles.Split(",");
+                    var roleNames = await _roleRepository.QueryWhere(t => roleIds.Contains(t.RoleId.ToString())).Select(t => t.RoleName).ToListAsync();
+                    item.RoleNames = string.Join(",", roleNames);
+                }
+            }
 
-            pageDto.Data = ObjectMapper.Map<List<AccountDto>>(accounts);
+            pageDto.Data = accountDtos;
             return pageDto;
         }
 
@@ -172,6 +186,24 @@ namespace CodeRun.Services.Service.Implements
             }
 
             account.Status = input.Status;
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public async Task DeleteAccountAsync(long accountId)
+        {
+            var account = await _accountRepository.GetByIdAsync(accountId);
+            if (account == null)
+            {
+                throw new BusinessException("数据不存在");
+            }
+
+            _accountRepository.Delete(account);
 
             await _unitOfWork.SaveChangesAsync();
         }

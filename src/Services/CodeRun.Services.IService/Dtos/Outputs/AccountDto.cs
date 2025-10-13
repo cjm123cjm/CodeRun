@@ -27,9 +27,14 @@
         /// </summary>
         public short Status { get; set; }
         /// <summary>
-        /// 角色(多个角色用,号分割)
+        /// 角色Id(多个角色用,号分割)
         /// </summary>
         public string? Roles { get; set; }
+
+        /// <summary>
+        /// 角色名称
+        /// </summary>
+        public string? RoleNames { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

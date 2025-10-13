@@ -50,5 +50,12 @@ namespace CodeRun.Services.IService.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
         Task UpdateAccountStatusAsync(UpdateAccountStatusInput input);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        Task DeleteAccountAsync(long accountId);
     }
 }
