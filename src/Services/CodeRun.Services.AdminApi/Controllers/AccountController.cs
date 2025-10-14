@@ -1,7 +1,9 @@
-﻿using CodeRun.Services.Common.Captcha;
+﻿using CodeRun.Services.AdminApi.CustomerPolicy;
+using CodeRun.Services.Common.Captcha;
 using CodeRun.Services.Common.RedisUtil;
 using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Enums;
 using CodeRun.Services.IService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -79,6 +81,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="queryInput"></param>
         /// <returns></returns>
         [HttpGet]
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_list)]
         public async Task<ResponseDto> LoadAccountList(AccountQueryInput queryInput)
         {
             var data = await _accountService.LoadAccountListAsync(queryInput);
@@ -92,6 +95,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_edit)]
         public async Task<ResponseDto> AddAccount(AccountAddInput input)
         {
             await _accountService.AddAccountAsync(input);
@@ -105,6 +109,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_edit)]
         public async Task<ResponseDto> UpdateAccount(AccountUpdateInput input)
         {
             await _accountService.UpdateAccountAsync(input);
@@ -118,6 +123,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_update_password)]
         public async Task<ResponseDto> UpdatePassword(UpdatePasswordInput input)
         {
             await _accountService.UpdatePasswordAsync(input);
@@ -131,6 +137,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_op_status)]
         public async Task<ResponseDto> UpdateAccountStatus(UpdateAccountStatusInput input)
         {
             await _accountService.UpdateAccountStatusAsync(input);
@@ -143,6 +150,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
+        [PermissionAuthorize(PermissionCodeEnum.settings_account_del)]
         public async Task<ResponseDto> DeleteAccountAsync(long accountId)
         {
             await _accountService.DeleteAccountAsync(accountId);

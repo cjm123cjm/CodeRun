@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using CodeRun.Services.Domain;
 using Serilog;
 using IGeekFan.AspNetCore.Knife4jUI;
+using CodeRun.Services.AdminApi.CustomerPolicy;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +94,10 @@ builder.Host.UseSerilog((context, logger) =>
     logger.ReadFrom.Configuration(context.Configuration);
     logger.Enrich.FromLogContext();
 });
+
+// 注册权限相关的服务
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 var app = builder.Build();
 

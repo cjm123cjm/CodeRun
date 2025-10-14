@@ -42,21 +42,6 @@ namespace CodeRun.Services.Service.Implements
             return menuTreeDtos;
         }
 
-        private List<MenuTreeDto> BuildTreeMenu(List<MenuTreeDto> menus, long parentId)
-        {
-            List<MenuTreeDto> menuTrees = new List<MenuTreeDto>();
-            foreach (var item in menus)
-            {
-                if (item.ParentId == parentId)
-                {
-                    item.ChildMenu.AddRange(BuildTreeMenu(menus, item.MenuId));
-                    menuTrees.Add(item);
-                }
-            }
-
-            return menuTrees;
-        }
-
         /// <summary>
         /// 添加/修改菜单
         /// </summary>

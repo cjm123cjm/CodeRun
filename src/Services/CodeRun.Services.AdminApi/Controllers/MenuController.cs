@@ -1,12 +1,16 @@
-﻿using CodeRun.Services.IService.Dtos;
+﻿using CodeRun.Services.AdminApi.CustomerPolicy;
+using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Enums;
 using CodeRun.Services.IService.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeRun.Services.AdminApi.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class MenuController : ControllerBase
     {
         private readonly IMenuService _menuService;
@@ -21,6 +25,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [PermissionAuthorize(PermissionCodeEnum.settings_menu_list)]
         public async Task<ResponseDto> LoadMenuTree()
         {
             var data = await _menuService.LoadMenuTreeAsync();
@@ -34,6 +39,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_menu_edit)]
         public async Task<ResponseDto> SaveMenu(MenuAddOrUpdateInput input)
         {
             await _menuService.SaveMenuAsync(input);
@@ -46,6 +52,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="menuId">菜单id</param>
         /// <returns></returns>
         [HttpPost]
+        [PermissionAuthorize(PermissionCodeEnum.settings_menu_del)]
         public async Task<ResponseDto> DeletedMenu(long menuId)
         {
             await _menuService.DeletedMenuAsync(menuId);

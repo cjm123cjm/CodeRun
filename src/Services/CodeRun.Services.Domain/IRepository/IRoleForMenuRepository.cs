@@ -10,5 +10,12 @@ namespace CodeRun.Services.Domain.IRepository
         /// <param name="roleIds"></param>
         /// <returns></returns>
         Task<List<long>> GetMenuIdsByRoleIdAsync(params long[] roleIds);
+
+        /// <summary>
+        /// 根据角色id获取菜单列表
+        /// </summary>
+        /// <param name="roleIds"></param>
+        /// <returns></returns>
+        Task<List<Menu>> GetMenusByRoleIdAsync(params long[] roleIds);
     }
 }

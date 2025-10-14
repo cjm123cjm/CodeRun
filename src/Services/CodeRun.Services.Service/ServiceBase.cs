@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CodeRun.Services.Common.Snowflake;
+using CodeRun.Services.IService.Dtos.Outputs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,6 +33,21 @@ namespace CodeRun.Services.Service
             ObjectMapper = LocationStorage.Instance.GetService<IMapper>()!;
 
             SnowIdWorker = SnowflakeUtil.CreateIdWorker();
+        }
+
+        protected List<MenuTreeDto> BuildTreeMenu(List<MenuTreeDto> menus, long parentId)
+        {
+            List<MenuTreeDto> menuTrees = new List<MenuTreeDto>();
+            foreach (var item in menus)
+            {
+                if (item.ParentId == parentId)
+                {
+                    item.ChildMenu.AddRange(BuildTreeMenu(menus, item.MenuId));
+                    menuTrees.Add(item);
+                }
+            }
+
+            return menuTrees;
         }
     }
 }

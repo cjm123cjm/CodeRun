@@ -79,7 +79,7 @@ namespace CodeRun.Services.AdminApi.Filters
                         UserName = userClaims.FirstOrDefault(p => p.Type == "UserName")!.Value,
                         UserId = Convert.ToInt64(userClaims.FirstOrDefault(p => p.Type == "UserId")!.Value),
                         Roles = userClaims.FirstOrDefault(p => p.Type == "Roles")!.Value,
-                    });
+                    }, userClaims.FirstOrDefault(p => p.Type == "permissionCodes")!.Value.Split(",").ToList());
                     // 设置新的token，给前端重新存储
                     type!.GetProperty("Token")!.SetValue(val, token);
                     context.Result = new JsonResult(val);

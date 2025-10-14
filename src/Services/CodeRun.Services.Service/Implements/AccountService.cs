@@ -15,6 +15,7 @@ namespace CodeRun.Services.Service.Implements
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IRoleForMenuRepository _roleForMenuRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
@@ -22,12 +23,14 @@ namespace CodeRun.Services.Service.Implements
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
             IJwtTokenGenerator jwtTokenGenerator,
-            IRoleRepository roleRepository)
+            IRoleRepository roleRepository,
+            IRoleForMenuRepository roleForMenuRepository)
         {
             _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
             _jwtTokenGenerator = jwtTokenGenerator;
             _roleRepository = roleRepository;
+            _roleForMenuRepository = roleForMenuRepository;
         }
 
         /// <summary>
@@ -94,9 +97,29 @@ namespace CodeRun.Services.Service.Implements
 
             var accountDto = ObjectMapper.Map<AccountDto>(user);
 
-            var token = _jwtTokenGenerator.GenerateToken(accountDto);
+            var loginDto = new LoginDto { Account = accountDto };
 
-            return new LoginDto { Account = accountDto, Token = token };
+            var roleIds = accountDto.Roles?.Split(",").Select(t => Convert.ToInt64(t)).ToList();
+            if (roleIds == null)
+            {
+                throw new BusinessException("账户未分配角色,请联系管理员");
+            }
+
+            //根据角色查询菜单
+            var menus = await _roleForMenuRepository.GetMenusByRoleIdAsync(roleIds.ToArray());
+
+            //获取权限编码
+            loginDto.PermissionCodes = menus.Select(t => t.PermissionCode).ToList();
+
+            //生成树形菜单列表
+            var treeMenuDto = ObjectMapper.Map<List<MenuTreeDto>>(menus.Where(t => t.MenuType == 0).ToList());
+
+            var menuTreeDtos = BuildTreeMenu(treeMenuDto, 0);
+
+            //token
+            loginDto.Token = _jwtTokenGenerator.GenerateToken(accountDto, loginDto.PermissionCodes);
+
+            return loginDto;
         }
 
         /// <summary>

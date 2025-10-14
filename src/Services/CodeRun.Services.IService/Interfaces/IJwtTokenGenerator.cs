@@ -10,8 +10,9 @@ namespace CodeRun.Services.IService.Interfaces
         /// <summary>
         /// 生成token
         /// </summary>
-        /// <param name="userDto"></param>
+        /// <param name="account">账户信息</param>
+        /// <param name="permissionCodes">权限信息</param>
         /// <returns></returns>
-        string GenerateToken(AccountDto account);
+        string GenerateToken(AccountDto account, List<string> permissionCodes);
     }
 }

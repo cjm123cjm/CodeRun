@@ -17,7 +17,7 @@ namespace CodeRun.Services.Service.Implements
         {
             _jwtOptions = jwtOptions.Value;
         }
-        public string GenerateToken(AccountDto account)
+        public string GenerateToken(AccountDto account, List<string> permissionCodes)
         {
             var tokenHandle = new JwtSecurityTokenHandler();
 
@@ -27,8 +27,13 @@ namespace CodeRun.Services.Service.Implements
             {
                 new Claim("UserName", account.UserName),
                 new Claim("UserId",account.UserId.ToString()),
-                new Claim("Roles",account.Roles?.ToString())
+                new Claim("Roles",account.Roles?.ToString()),
             };
+
+            foreach (var permission in permissionCodes)
+            {
+                claimList.Add(new Claim("Permission", permission));
+            }
 
             var tokenDescript = new SecurityTokenDescriptor
             {
