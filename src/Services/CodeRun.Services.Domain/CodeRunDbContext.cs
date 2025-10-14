@@ -13,6 +13,11 @@ namespace CodeRun.Services.Domain
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<RoleForMenu> RoleForMenus { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<QuestionInfo> QuestionInfos { get; set; }
+        public DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public DbSet<ExamQuestionItem> ExamQuestionItems { get; set; }
+        public DbSet<ShareInfo> ShareInfos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(options =>

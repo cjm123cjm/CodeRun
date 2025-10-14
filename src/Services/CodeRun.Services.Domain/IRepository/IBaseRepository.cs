@@ -17,7 +17,7 @@ namespace CodeRun.Services.Domain.IRepository
         /// <param name="expression">条件表达式</param>
         /// <param name="isNoTracking">是否跟踪</param>
         /// <returns></returns>
-        IQueryable<Entity> QueryWhere(Expression<Func<Entity, bool>>? expression, bool isNoTracking = true);
+        IQueryable<Entity> QueryWhere(Expression<Func<Entity, bool>>? expression, bool isNoTracking = false);
 
         /// <summary>
         /// 查询数据
