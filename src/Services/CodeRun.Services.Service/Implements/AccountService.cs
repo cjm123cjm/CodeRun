@@ -1,4 +1,5 @@
-﻿using CodeRun.Services.Common;
+﻿using Castle.Core.Configuration;
+using CodeRun.Services.Common;
 using CodeRun.Services.Domain.CustomerException;
 using CodeRun.Services.Domain.Entities;
 using CodeRun.Services.Domain.IRepository;
@@ -8,6 +9,7 @@ using CodeRun.Services.IService.Dtos.Inputs;
 using CodeRun.Services.IService.Dtos.Outputs;
 using CodeRun.Services.IService.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CodeRun.Services.Service.Implements
 {
@@ -18,19 +20,22 @@ namespace CodeRun.Services.Service.Implements
         private readonly IRoleForMenuRepository _roleForMenuRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
         public AccountService(
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
             IJwtTokenGenerator jwtTokenGenerator,
             IRoleRepository roleRepository,
-            IRoleForMenuRepository roleForMenuRepository)
+            IRoleForMenuRepository roleForMenuRepository,
+            Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
             _jwtTokenGenerator = jwtTokenGenerator;
             _roleRepository = roleRepository;
             _roleForMenuRepository = roleForMenuRepository;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -105,8 +110,18 @@ namespace CodeRun.Services.Service.Implements
                 throw new BusinessException("账户未分配角色,请联系管理员");
             }
 
-            //根据角色查询菜单
-            var menus = await _roleForMenuRepository.GetMenusByRoleIdAsync(roleIds.ToArray());
+            var menus = new List<Menu>();
+
+            var superAdmin = _configuration.GetSection("SuperAdmin").Get<List<string>>();
+            if (superAdmin != null && superAdmin.Contains(accountDto.Phone))
+            {
+                menus = await _roleForMenuRepository.GetMenusAsync();
+            }
+            else
+            {
+                //根据角色查询菜单
+                menus = await _roleForMenuRepository.GetMenusByRoleIdAsync(roleIds.ToArray());
+            }
 
             //获取权限编码
             loginDto.PermissionCodes = menus.Select(t => t.PermissionCode).ToList();

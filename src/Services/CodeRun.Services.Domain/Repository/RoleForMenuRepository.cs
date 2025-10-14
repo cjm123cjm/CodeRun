@@ -22,6 +22,17 @@ namespace CodeRun.Services.Domain.Repository
         }
 
         /// <summary>
+        /// 获取所有菜单列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Menu>> GetMenusAsync()
+        {
+            var menus = await _context.Menus.AsNoTracking().ToListAsync();
+
+            return menus;
+        }
+
+        /// <summary>
         /// 根据角色id获取菜单列表
         /// </summary>
         /// <param name="roleIds"></param>
