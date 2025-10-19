@@ -14,6 +14,9 @@ using Serilog;
 using IGeekFan.AspNetCore.Knife4jUI;
 using CodeRun.Services.AdminApi.CustomerPolicy;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
+using CodeRun.Services.IService.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +102,10 @@ builder.Host.UseSerilog((context, logger) =>
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+//配置上传文件位置
+var folderPathOption = builder.Configuration.GetSection("FolderPath");
+builder.Services.Configure<FolderPath>(folderPathOption);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -113,6 +120,18 @@ LocationStorage.Instance = app.Services;
 app.UseErrorHandling();
 
 app.UseCors("CodeRun.Client");
+
+//静态文件
+var path = app.Services.GetRequiredService<IOptions<FolderPath>>();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(path.Value.PhysicalPath)),
+    RequestPath = path.Value.virtualPath,
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=600");
+    }
+});
 
 app.UseSession();
 
