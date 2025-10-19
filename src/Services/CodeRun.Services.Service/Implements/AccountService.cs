@@ -116,11 +116,13 @@ namespace CodeRun.Services.Service.Implements
             if (superAdmin != null && superAdmin.Contains(accountDto.Phone))
             {
                 menus = await _roleForMenuRepository.GetMenusAsync();
+                accountDto.IsAdmin = true;
             }
             else
             {
                 //根据角色查询菜单
                 menus = await _roleForMenuRepository.GetMenusByRoleIdAsync(roleIds.ToArray());
+                accountDto.IsAdmin = false;
             }
 
             //获取权限编码

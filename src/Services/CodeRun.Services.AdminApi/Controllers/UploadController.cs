@@ -46,6 +46,8 @@ namespace CodeRun.Services.AdminApi.Controllers
             using var targetStream = System.IO.File.Create(fileFullPath);
 
             await formFile.CopyToAsync(targetStream);
+            
+            //todo:生成缩略图
 
             targetStream.Dispose();
 

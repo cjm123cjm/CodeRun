@@ -39,5 +39,9 @@
         /// 创建时间
         /// </summary>
         public DateTime CreatedTime { get; set; }
+        /// <summary>
+        /// 是否是超级管理员
+        /// </summary>
+        public bool IsAdmin { get; set; }
     }
 }
