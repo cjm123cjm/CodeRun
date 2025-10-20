@@ -12,7 +12,7 @@
         /// <summary>
         /// 分类名称
         /// </summary>
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = null!;
         /// <summary>
         /// 排序
         /// </summary>
@@ -20,11 +20,11 @@
         /// <summary>
         /// 图标
         /// </summary>
-        public string IconPath { get; set; }
+        public string? IconPath { get; set; }
         /// <summary>
         /// 背景颜色
         /// </summary>
-        public string BgColor { get; set; }
+        public string? BgColor { get; set; }
         /// <summary>
         /// 0:问题分类，1:考题分类,2:问题分类和考题分类
         /// </summary>

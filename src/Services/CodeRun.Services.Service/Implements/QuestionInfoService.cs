@@ -35,27 +35,7 @@ namespace CodeRun.Services.Service.Implements
         /// <returns></returns>
         public async Task<PageDto<QuestionInfoDto>> LoadQuestionInfoListAsync(QuestionInfoQueryInput queryInput)
         {
-            var query = _questionInfoRepository.Query();
-            if (!string.IsNullOrWhiteSpace(queryInput.Title))
-            {
-                query = query.Where(t => t.Title.Contains(queryInput.Title));
-            }
-            if (queryInput.CategoryId.HasValue)
-            {
-                query = query.Where(t => t.CategoryId == queryInput.CategoryId.Value);
-            }
-            if (queryInput.DifficultyLevel.HasValue)
-            {
-                query = query.Where(t => t.DifficultyLevel == queryInput.DifficultyLevel.Value);
-            }
-            if (queryInput.Status.HasValue)
-            {
-                query = query.Where(t => t.Status == queryInput.Status.Value);
-            }
-            if (!string.IsNullOrEmpty(queryInput.CreatedUserName))
-            {
-                query = query.Where(t => t.CreatedUserName.Contains(queryInput.CreatedUserName));
-            }
+            var query = SearchQuery(queryInput);
 
             var totalCount = await query.CountAsync();
 
@@ -181,6 +161,130 @@ namespace CodeRun.Services.Service.Implements
             }
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 批量导入问题
+        /// </summary>
+        /// <param name="importDtos"></param>
+        /// <returns></returns>
+        public async Task BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos)
+        {
+            var categoryNames = importDtos.Select(t => t.CategoryName).Distinct().ToList();
+
+            var categories = await _categoryRepository.QueryWhere(t => categoryNames.Contains(t.CategoryName), false).ToListAsync();
+
+            Dictionary<int, List<string>> errorStr = new Dictionary<int, List<string>>();
+
+            List<QuestionInfo> saveQuestion = new List<QuestionInfo>();
+            int index = 0;
+            foreach (var item in importDtos)
+            {
+                index++;
+                List<string> error = new List<string>();
+                var category = categories.FirstOrDefault(t => t.CategoryName == item.CategoryName);
+                if (category == null)
+                {
+                    error.Add($"第{index}行系统中不存分类名称为{item.CategoryName},请先添加");
+                }
+                if (item.DifficultyLevel < 1 || item.DifficultyLevel > 5)
+                {
+                    error.Add($"第{index}行难度只能是1-5的正整数");
+                }
+                if (error.Count > 0)
+                {
+                    errorStr.Add(index, error);
+                    continue;
+                }
+
+                QuestionInfo questionInfo = new QuestionInfo
+                {
+                    QuestionId = SnowIdWorker.NextId(),
+                    CategoryId = category.CategoryId,
+                    CreatedTime = DateTime.UtcNow,
+                    CreatedUserId = LoginUserId,
+                    CreatedUserName = LoginUserName,
+                    Title = item.Title,
+                    CategoryName = category.CategoryName,
+                    DifficultyLevel = item.DifficultyLevel,
+                    Question = item.Question,
+                    AnswerAnalysis = item.AnswerAnalysis
+                };
+
+                saveQuestion.Add(questionInfo);
+            }
+
+            if (errorStr.Count != 0)
+            {
+                throw new BusinessException(errorStr.ToString());
+            }
+
+            await _questionInfoRepository.AddAsync(saveQuestion.ToArray());
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 上一页/下一页查看
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        public async Task<QuestionInfoAddOrUpdateInput> ShowQuestionInfoDetailNextAsync(QuestionInfoQueryInput queryInput)
+        {
+            if (queryInput.NextType == 0 || queryInput.CurrentQuestionInfoId <= 0)
+            {
+                throw new BusinessException("参数错误");
+            }
+            var query = SearchQuery(queryInput);
+
+            //上一页
+            if (queryInput.NextType == 1)
+            {
+                query = query.Where(t => t.QuestionId < queryInput.CurrentQuestionInfoId);
+            }
+            //下一页
+            else
+            {
+                query = query.Where(t => t.QuestionId > queryInput.CurrentQuestionInfoId);
+            }
+
+            var question = await query.OrderByDescending(t => t.CreatedTime).Take(1).FirstOrDefaultAsync();
+
+            if (question == null)
+            {
+                if (queryInput.NextType == 1)
+                    throw new BusinessException("已经是第一条了");
+                else
+                    throw new BusinessException("已经是最后一条了");
+            }
+
+            return ObjectMapper.Map<QuestionInfoAddOrUpdateInput>(question);
+        }
+        private IQueryable<QuestionInfo> SearchQuery(QuestionInfoQueryInput queryInput)
+        {
+            var query = _questionInfoRepository.Query();
+            if (!string.IsNullOrWhiteSpace(queryInput.Title))
+            {
+                query = query.Where(t => t.Title.Contains(queryInput.Title));
+            }
+            if (queryInput.CategoryId.HasValue)
+            {
+                query = query.Where(t => t.CategoryId == queryInput.CategoryId.Value);
+            }
+            if (queryInput.DifficultyLevel.HasValue)
+            {
+                query = query.Where(t => t.DifficultyLevel == queryInput.DifficultyLevel.Value);
+            }
+            if (queryInput.Status.HasValue)
+            {
+                query = query.Where(t => t.Status == queryInput.Status.Value);
+            }
+            if (!string.IsNullOrEmpty(queryInput.CreatedUserName))
+            {
+                query = query.Where(t => t.CreatedUserName.Contains(queryInput.CreatedUserName));
+            }
+
+            return query;
         }
     }
 }

@@ -41,5 +41,19 @@ namespace CodeRun.Services.IService.Interfaces
         /// <param name="status">0-未发布,1-已发布</param>
         /// <returns></returns>
         Task UpdateStatusQuestionInfoAsync(string questionInfoIds,int status);
+
+        /// <summary>
+        /// 批量导入问题
+        /// </summary>
+        /// <param name="importDtos"></param>
+        /// <returns></returns>
+        Task BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos);
+
+        /// <summary>
+        /// 上一页/下一页查看
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        Task<QuestionInfoAddOrUpdateInput> ShowQuestionInfoDetailNextAsync(QuestionInfoQueryInput queryInput);
     }
 }

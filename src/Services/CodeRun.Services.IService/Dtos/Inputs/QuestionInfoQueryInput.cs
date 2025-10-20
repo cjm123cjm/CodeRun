@@ -22,5 +22,14 @@
         /// 创建人名称
         /// </summary>
         public string? CreatedUserName { get; set; }
+
+        /// <summary>
+        /// 1-上一页/2-下一页
+        /// </summary>
+        public int NextType { get; set; }
+        /// <summary>
+        /// 当前的id
+        /// </summary>
+        public long CurrentQuestionInfoId { get; set; }
     }
 }
