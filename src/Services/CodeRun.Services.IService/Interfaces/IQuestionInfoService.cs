@@ -40,7 +40,7 @@ namespace CodeRun.Services.IService.Interfaces
         /// <param name="questionInfoIds">根据,号分割</param>
         /// <param name="status">0-未发布,1-已发布</param>
         /// <returns></returns>
-        Task UpdateStatusQuestionInfoAsync(string questionInfoIds,int status);
+        Task UpdateStatusQuestionInfoAsync(string questionInfoIds, int status);
 
         /// <summary>
         /// 批量导入问题
