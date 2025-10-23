@@ -1,11 +1,11 @@
-﻿using CodeRun.Services.IService.Dtos;
-using CodeRun.Services.IService.Dtos.Inputs.App;
-using CodeRun.Services.IService.Dtos.Outputs.App;
+﻿using CodeRun.Services.IService.Dtos.Inputs.App;
+using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Interfaces.App;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CodeRun.Services.AdminApi.CustomerPolicy;
+using CodeRun.Services.IService.Enums;
 
-namespace CodeRun.Services.AppApi.Controllers
+namespace CodeRun.Services.AdminApi.Controllers
 {
     /// <summary>
     /// 设备管理
@@ -25,7 +25,9 @@ namespace CodeRun.Services.AppApi.Controllers
         /// </summary>
         /// <param name="queryInput"></param>
         /// <returns></returns>
-        public async Task<ResponseDto> LoadAppDeviceListAsync(AppDeviceQueryInput queryInput)
+        [HttpGet]
+        [PermissionAuthorize(PermissionCodeEnum.app_device_list)]
+        public async Task<ResponseDto> LoadAppDeviceList(AppDeviceQueryInput queryInput)
         {
             var data = await _appDeviceService.LoadAppDeviceListAsync(queryInput);
 

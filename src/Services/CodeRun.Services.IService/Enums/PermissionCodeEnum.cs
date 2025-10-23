@@ -99,6 +99,11 @@ namespace CodeRun.Services.IService.Enums
         [Description("轮播图新增/修改/删除")]
         app_carousel_edit,
 
+        [Description("反馈列表")]
+        app_feedback_list,
+        [Description("反馈回复")]
+        app_feedback_replay,
+
         [Description("APP用户")]
         app_user_list,
         [Description("APP用户编辑")]

@@ -5,5 +5,6 @@ namespace CodeRun.Services.Domain.IRepository.App
 {
     public interface IAppCarouselRepository : IBaseRepository<AppCarousel>
     {
+        Task<int> MaxSortAsync();
     }
 }
