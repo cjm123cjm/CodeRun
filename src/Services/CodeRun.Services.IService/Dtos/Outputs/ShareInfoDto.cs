@@ -1,9 +1,6 @@
-﻿namespace CodeRun.Services.Domain.Entities
+﻿namespace CodeRun.Services.IService.Dtos.Outputs
 {
-    /// <summary>
-    /// 分享
-    /// </summary>
-    public class ShareInfo
+    public class ShareInfoDto
     {
         /// <summary>
         /// 分享id
@@ -20,11 +17,7 @@
         /// <summary>
         /// 封面路径
         /// </summary>
-        public string CoverPath { get; set; }
-        /// <summary>
-        /// 内容
-        /// </summary>
-        public string Content { get; set; }
+        public string? CoverPath { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -40,7 +33,7 @@
         /// <summary>
         /// 创建人名称
         /// </summary>
-        public string CreatedUserName { get; set; }
+        public string CreatedUserName { get; set; } = null!;
         /// <summary>
         /// 阅读数量
         /// </summary>
@@ -49,9 +42,5 @@
         /// 收藏数量
         /// </summary>
         public int CollectCount { get; set; }
-        /// <summary>
-        /// 0-内部 1-外部投稿
-        /// </summary>
-        public int PostUserType { get; set; }
     }
 }
