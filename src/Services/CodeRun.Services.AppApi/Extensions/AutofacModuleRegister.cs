@@ -18,7 +18,7 @@ namespace CodeRun.Services.AppApi.Extensions
             builder.RegisterType<ServiceAop>();
 
             //获取 Service.dll 程序集服务,并注册
-            builder.RegisterAssemblyTypes(Assembly.Load("MyCloudDrive.IService"), Assembly.Load("MyCloudDrive.Service"))
+            builder.RegisterAssemblyTypes(Assembly.Load("CodeRun.Services.IService"), Assembly.Load("CodeRun.Services.Service"))
                 .Where(a => a.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
@@ -28,7 +28,7 @@ namespace CodeRun.Services.AppApi.Extensions
             builder.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IBaseRepository<>)); //注册仓储
 
             //获取 Repository.dll 程序集服务,并注册
-            builder.RegisterAssemblyTypes(Assembly.Load("MyCloudDrive.Domain"))
+            builder.RegisterAssemblyTypes(Assembly.Load("CodeRun.Services.Domain"))
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces();
         }
