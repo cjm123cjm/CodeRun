@@ -16,8 +16,4 @@
 		<ProjectReference Include="..\CodeRun.Services.Service\CodeRun.Services.Service.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Controllers\" />
-	</ItemGroup>
-
 </Project>
