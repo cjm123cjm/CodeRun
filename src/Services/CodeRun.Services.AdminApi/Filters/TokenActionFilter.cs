@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using CodeRun.Services.Common;
-using CodeRun.Services.IService.Dtos.Outputs;
-using CodeRun.Services.IService.Interfaces;
 using CodeRun.Services.IService.Options;
+using CodeRun.Services.IService.Interfaces.Web;
+using CodeRun.Services.IService.Dtos.Outputs.Web;
 
 namespace CodeRun.Services.AdminApi.Filters
 {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CodeRun.Services.Domain.Entities;
-using CodeRun.Services.IService.Dtos.Inputs;
-using CodeRun.Services.IService.Dtos.Outputs;
+using CodeRun.Services.Domain.Entities.Web;
+using CodeRun.Services.IService.Dtos.Inputs.Web;
+using CodeRun.Services.IService.Dtos.Outputs.Web;
 
 namespace CodeRun.Services.IService.Profiles
 {

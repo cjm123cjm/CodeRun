@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CodeRun.Services.Common.Snowflake;
-using CodeRun.Services.IService.Dtos.Outputs;
+using CodeRun.Services.IService.Dtos.Outputs.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 

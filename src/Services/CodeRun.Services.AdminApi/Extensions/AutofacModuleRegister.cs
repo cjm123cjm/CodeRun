@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extras.DynamicProxy;
-using CodeRun.Services.Domain.IRepository;
-using CodeRun.Services.Domain.Repository;
-using CodeRun.Services.IService.Interfaces;
-using CodeRun.Services.Service.Implements;
+using CodeRun.Services.Domain.IRepository.Web;
+using CodeRun.Services.Domain.Repository.Web;
+using CodeRun.Services.IService.Interfaces.Web;
+using CodeRun.Services.Service.Implements.Web;
 using System.Reflection;
 
 namespace CodeRun.Services.AdminApi.Extensions

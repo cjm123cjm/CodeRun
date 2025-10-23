@@ -1,9 +1,9 @@
 ﻿using CodeRun.Services.AdminApi.CustomerPolicy;
 using CodeRun.Services.IService.Dtos;
-using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Dtos.Inputs.Web;
 using CodeRun.Services.IService.Dtos.Outputs;
 using CodeRun.Services.IService.Enums;
-using CodeRun.Services.IService.Interfaces;
+using CodeRun.Services.IService.Interfaces.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

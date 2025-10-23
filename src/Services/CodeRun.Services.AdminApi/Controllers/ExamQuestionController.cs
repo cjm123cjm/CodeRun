@@ -1,9 +1,9 @@
 ﻿using CodeRun.Services.AdminApi.CustomerPolicy;
 using CodeRun.Services.Domain.CustomerException;
 using CodeRun.Services.IService.Dtos;
-using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Dtos.Inputs.Web;
 using CodeRun.Services.IService.Enums;
-using CodeRun.Services.IService.Interfaces;
+using CodeRun.Services.IService.Interfaces.Web;
 using CodeRun.Services.IService.Options;
 using CodeRun.Services.Service.Implements;
 using Microsoft.AspNetCore.Hosting;

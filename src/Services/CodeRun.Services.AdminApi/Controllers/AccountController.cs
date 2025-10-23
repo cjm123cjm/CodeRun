@@ -2,9 +2,9 @@
 using CodeRun.Services.Common.Captcha;
 using CodeRun.Services.Common.RedisUtil;
 using CodeRun.Services.IService.Dtos;
-using CodeRun.Services.IService.Dtos.Inputs;
+using CodeRun.Services.IService.Dtos.Inputs.Web;
 using CodeRun.Services.IService.Enums;
-using CodeRun.Services.IService.Interfaces;
+using CodeRun.Services.IService.Interfaces.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeRun.Services.AdminApi.Controllers
