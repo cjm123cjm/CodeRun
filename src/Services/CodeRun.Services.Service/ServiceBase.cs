@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CodeRun.Services.Common.Snowflake;
 using CodeRun.Services.IService.Dtos.Outputs.Web;
+using CodeRun.Services.IService.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace CodeRun.Services.Service
 {
@@ -15,6 +17,7 @@ namespace CodeRun.Services.Service
         protected IMapper ObjectMapper { get; set; }
         protected string ServerUrl { get; set; }
         protected IdWorker SnowIdWorker { get; set; }
+        protected FolderPath FolderPath { get; set; }  
 
         public ServiceBase()
         {
@@ -35,6 +38,8 @@ namespace CodeRun.Services.Service
             ObjectMapper = LocationStorage.Instance.GetService<IMapper>()!;
 
             SnowIdWorker = SnowflakeUtil.CreateIdWorker();
+
+            FolderPath = LocationStorage.Instance.GetRequiredService<IOptions<FolderPath>>().Value;
         }
 
         protected List<MenuTreeDto> BuildTreeMenu(List<MenuTreeDto> menus, long parentId)

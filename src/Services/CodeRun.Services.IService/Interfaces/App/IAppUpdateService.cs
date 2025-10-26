@@ -7,7 +7,7 @@ namespace CodeRun.Services.IService.Interfaces.App
     public interface IAppUpdateService
     {
         /// <summary>
-        /// 加载发布消息
+        /// 加载发布列表
         /// </summary>
         /// <param name="queryInput"></param>
         /// <returns></returns>
@@ -19,5 +19,19 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="addOrUpdateInput"></param>
         /// <returns></returns>
         Task SaveAppUpdateAsync(AppUpdateAddOrUpdateInput addOrUpdateInput);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="addUpdateId"></param>
+        /// <returns></returns>
+        Task DeletedAppUpdateAsync(long addUpdateId);
+
+        /// <summary>
+        /// 发布app
+        /// </summary>
+        /// <param name="updateInput"></param>
+        /// <returns></returns>
+        Task PostUpdateAsync(PostAppUpdateInput updateInput);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CodeRun.Services.IService.Dtos.Inputs.App
+﻿using Microsoft.AspNetCore.Http;
+
+namespace CodeRun.Services.IService.Dtos.Inputs.App
 {
     /// <summary>
     /// 版本发布/修改输入参数
@@ -30,5 +32,6 @@
         /// 灰度设备id
         /// </summary>
         public string? GrayscaleDevice { get; set; }
+        public IFormFile? File { get; set; } = null;
     }
 }
