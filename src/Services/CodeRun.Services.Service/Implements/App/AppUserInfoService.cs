@@ -1,10 +1,14 @@
 ﻿using CodeRun.Services.Domain.CustomerException;
+using CodeRun.Services.Domain.Entities.App;
 using CodeRun.Services.Domain.IRepository.App;
 using CodeRun.Services.Domain.UnitOfWork;
 using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs.App;
+using CodeRun.Services.IService.Dtos.Inputs.Web;
 using CodeRun.Services.IService.Dtos.Outputs.App;
 using CodeRun.Services.IService.Interfaces.App;
+using CodeRun.Services.IService.Interfaces.Web;
+using CodeRun.Services.Service.Implements.Web;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,14 +21,17 @@ namespace CodeRun.Services.Service.Implements.App
     public class AppUserInfoService : ServiceBase, IAppUserInfoService
     {
         private readonly IAppUserInfoRepository _userInfoRepository;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUnitOfWork _unitOfWork;
 
         public AppUserInfoService(
             IAppUserInfoRepository userInfoRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IJwtTokenGenerator jwtTokenGenerator)
         {
             _userInfoRepository = userInfoRepository;
             _unitOfWork = unitOfWork;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         /// <summary>
@@ -83,6 +90,126 @@ namespace CodeRun.Services.Service.Implements.App
             appUser.Status = update.Status;
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="registerInput"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task RegisterAsync(AppRegisterInput registerInput)
+        {
+            //判断邮箱是否存在
+            int emailCount = await _userInfoRepository.QueryWhere(t => t.Email == registerInput.Email).CountAsync();
+            if (emailCount != 0)
+            {
+                throw new BusinessException("邮箱已存在");
+            }
+            //昵称是否存在
+            int nickNameCount = await _userInfoRepository.QueryWhere(t => t.NickName == registerInput.NickName).CountAsync();
+            if (nickNameCount != 0)
+            {
+                throw new BusinessException("昵称已存在");
+            }
+            AppUserInfo appUserInfo = new AppUserInfo()
+            {
+                UserId = SnowIdWorker.NextId(),
+                Email = registerInput.Email,
+                NickName = registerInput.NickName,
+                Password = registerInput.Password,
+                Sex = registerInput.Sex,
+                JoinTime = DateTime.Now,
+                LastLoginTime = DateTime.Now,
+                LastUseDeviceId = registerInput.DeviceId,
+                LastUseDeviceBrand = registerInput.DeviceBrand,
+                LastLoginIp = UserIp
+            };
+
+            await _userInfoRepository.AddAsync(appUserInfo);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="loginInput"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<AppLoginDto> LoginAsync(AppLoginInput loginInput)
+        {
+            var appUser = await _userInfoRepository.QueryWhere(t => t.Email == loginInput.Email && t.Password == loginInput.Password).FirstOrDefaultAsync();
+            if (appUser == null)
+            {
+                throw new BusinessException("账户密码错误");
+            }
+            if (appUser.Status == 0)
+            {
+                throw new BusinessException("账户已禁用");
+            }
+
+            appUser.LastLoginTime = DateTime.Now;
+            appUser.LastUseDeviceId = loginInput.DeviceId;
+            appUser.LastUseDeviceBrand = loginInput.DeviceBrand;
+            appUser.LastLoginIp = UserIp;
+
+            AppLoginDto appLoginDto = new AppLoginDto
+            {
+                UserId = appUser.UserId,
+                NickName = appUser.NickName,
+                Email = appUser.Email,
+            };
+
+            _userInfoRepository.Update(appUser);
+
+            //生成token
+            string token = _jwtTokenGenerator.AppGenerateToken(appLoginDto);
+            appLoginDto.Token = token;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return appLoginDto;
+        }
+
+        /// <summary>
+        /// 自动登录
+        /// </summary>
+        /// <param name="loginInput"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task<AppLoginDto> AutoLoginAsync(AutoLoginInput loginInput)
+        {
+            AppLoginDto appLoginDto = new AppLoginDto
+            {
+                UserId = LoginUserId,
+                NickName = LoginUserName,
+                Email = Email,
+            };
+
+            var appUser = await _userInfoRepository.GetByIdAsync(LoginUserId);
+            if (appUser == null)
+            {
+                throw new BusinessException("账户密码错误");
+            }
+            if (appUser.Status == 0)
+            {
+                throw new BusinessException("账户已禁用");
+            }
+            appUser.LastLoginTime = DateTime.Now;
+            appUser.LastUseDeviceId = loginInput.DeviceId;
+            appUser.LastUseDeviceBrand = loginInput.DeviceBrand;
+            appUser.LastLoginIp = UserIp;
+
+            _userInfoRepository.Update(appUser);
+
+            //生成token
+            string token = _jwtTokenGenerator.AppGenerateToken(appLoginDto);
+            appLoginDto.Token = token;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return appLoginDto;
         }
     }
 }

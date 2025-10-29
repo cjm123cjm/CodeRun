@@ -1,4 +1,5 @@
-﻿using CodeRun.Services.IService.Dtos.Outputs.Web;
+﻿using CodeRun.Services.IService.Dtos.Outputs.App;
+using CodeRun.Services.IService.Dtos.Outputs.Web;
 using CodeRun.Services.IService.Interfaces.Web;
 using CodeRun.Services.IService.Options;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,34 @@ namespace CodeRun.Services.Service.Implements.Web
         {
             _jwtOptions = jwtOptions.Value;
         }
+
+        public string AppGenerateToken(AppLoginDto account)
+        {
+            var tokenHandle = new JwtSecurityTokenHandler();
+
+            var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+            var claimList = new List<Claim>
+            {
+                new Claim("UserId",account.UserId.ToString()),
+                new Claim("UserName",account.NickName),
+                new Claim("Email",account.Email),
+            };
+
+            var tokenDescript = new SecurityTokenDescriptor
+            {
+                Audience = _jwtOptions.Audience,
+                Issuer = _jwtOptions.Issuer,
+                Subject = new ClaimsIdentity(claimList),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.Expires),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandle.CreateToken(tokenDescript);
+
+            return tokenHandle.WriteToken(token);
+        }
+
         public string GenerateToken(AccountDto account, List<string> permissionCodes)
         {
             var tokenHandle = new JwtSecurityTokenHandler();

@@ -32,7 +32,7 @@
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime JoinTime { get; set; }=DateTime.Now;
+        public DateTime JoinTime { get; set; } = DateTime.Now;
         /// <summary>
         /// 最后登陆时间
         /// </summary>

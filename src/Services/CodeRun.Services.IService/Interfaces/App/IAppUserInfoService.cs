@@ -19,5 +19,25 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="update"></param>
         /// <returns></returns>
         Task UpdateStatusAppUserInfoAsync(UpdateStatusAppUserInput update);
+
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="registerInput"></param>
+        /// <returns></returns>
+        Task RegisterAsync(AppRegisterInput registerInput);
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <returns></returns>
+        Task<AppLoginDto> LoginAsync(AppLoginInput loginInput);
+
+        /// <summary>
+        /// 自动登录
+        /// </summary>
+        /// <param name="loginInput"></param>
+        /// <returns></returns>
+        Task<AppLoginDto> AutoLoginAsync(AutoLoginInput loginInput);
     }
 }
