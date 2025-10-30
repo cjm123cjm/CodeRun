@@ -1,4 +1,5 @@
-﻿using CodeRun.Services.IService.Dtos;
+﻿using CodeRun.Services.Domain.Entities.App;
+using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs.App;
 using CodeRun.Services.IService.Dtos.Outputs.App;
 
@@ -21,6 +22,13 @@ namespace CodeRun.Services.IService.Interfaces.App
         Task SaveAppUpdateAsync(AppUpdateAddOrUpdateInput addOrUpdateInput);
 
         /// <summary>
+        /// 根据id获取更新数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<AppUpdate?> GetOneByIdAsync(long id);
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="addUpdateId"></param>
@@ -33,5 +41,12 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="updateInput"></param>
         /// <returns></returns>
         Task PostUpdateAsync(PostAppUpdateInput updateInput);
+
+        /// <summary>
+        /// 检查更新
+        /// </summary>
+        /// <param name="updateVersionInput"></param>
+        /// <returns></returns>
+        Task<AppUpdateDto> SelectLastAppVersionAsync(UpdateVersionInput updateVersionInput);
     }
 }

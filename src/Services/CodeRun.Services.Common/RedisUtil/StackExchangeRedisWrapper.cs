@@ -234,6 +234,31 @@ namespace CodeRun.Services.Common.RedisUtil
             key = GetRealStoreKey(key);
             return Do(db => db.StringIncrement(key, val));
         }
+
+        /// <summary>
+        /// 为数字增长val并设置过期时间
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="val">可以为负</param>
+        /// <param name="expiry">过期时间</param>
+        /// <returns>增长后的值</returns>
+        public long StringIncrementWithExpiry(string key, long val = 1, TimeSpan? expiry = null)
+        {
+            key = GetRealStoreKey(key);
+            return Do(db =>
+            {
+                var result = db.StringIncrement(key, val);
+
+                // 如果设置了过期时间，并且这是第一次设置（值为1或val）
+                if (expiry.HasValue && result == val)
+                {
+                    db.KeyExpire(key, expiry);
+                }
+
+                return result;
+            });
+        }
+
         /// <summary>
         /// 为数字减少val
         /// </summary>

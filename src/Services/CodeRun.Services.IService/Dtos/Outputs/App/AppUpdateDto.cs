@@ -12,7 +12,7 @@
         /// </summary>
         public string UpdateDesc { get; set; } = null!;
         /// <summary>
-        /// 更新类型:0-全更新,1-局部热更新
+        /// 更新类型:0-全更新,1-局部热更新,2-全网发布
         /// </summary>
         public int UpdateType { get; set; }
         /// <summary>
@@ -27,5 +27,10 @@
         /// 灰度设备id
         /// </summary>
         public string? GrayscaleDevice { get; set; }
+
+        /// <summary>
+        /// 文件大小
+        /// </summary>
+        public double Size { get; set; }
     }
 }

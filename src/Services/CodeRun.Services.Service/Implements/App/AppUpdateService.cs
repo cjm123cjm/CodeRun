@@ -161,5 +161,54 @@ namespace CodeRun.Services.Service.Implements.App
 
             await _unitOfWork.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 检查更新
+        /// </summary>
+        /// <param name="updateVersionInput"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<AppUpdateDto> SelectLastAppVersionAsync(UpdateVersionInput updateVersionInput)
+        {
+            var app = await _appUpdateRepository.QueryWhere(t => IsVersionGreater(t.Version, updateVersionInput.AppVersion!) &&
+                                                                (t.Status == 2 ||
+                                                                (t.Status == 1 && t.GrayscaleDevice != null && t.GrayscaleDevice.Contains(updateVersionInput.DeviceId))))
+                                                                .OrderByDescending(t => t.Id)
+                                                                .FirstOrDefaultAsync();
+
+            var appDto = ObjectMapper.Map<AppUpdateDto>(app);
+
+            return appDto;
+        }
+
+        // 版本号比较方法
+        private bool IsVersionGreater(string version1, string version2)
+        {
+            if (string.IsNullOrEmpty(version1) || string.IsNullOrEmpty(version2))
+                return false;
+
+            try
+            {
+                var v1 = new Version(version1);
+                var v2 = new Version(version2);
+                return v1 > v2;
+            }
+            catch
+            {
+                // 如果版本号格式不正确，回退到字符串比较
+                return string.Compare(version1, version2, StringComparison.Ordinal) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 根据id获取更新数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<AppUpdate?> GetOneByIdAsync(long id)
+        {
+            return await _appUpdateRepository.GetByIdAsync(id);
+        }
     }
 }

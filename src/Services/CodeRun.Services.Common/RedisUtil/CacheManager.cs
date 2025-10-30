@@ -233,5 +233,16 @@ namespace CodeRun.Services.Common.RedisUtil
         {
             return RedisClient.KeyExpire(key, expiry);
         }
+
+        /// <summary>
+        /// 为数字增长val
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="val">可以为负</param>
+        /// <returns>增长后的值</returns>
+        public static long StringIncrementWithExpiry(string key, long val = 1, TimeSpan? expiry = null)
+        {
+            return RedisClient.StringIncrementWithExpiry(key, val, expiry);
+        }
     }
 }

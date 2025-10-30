@@ -8,11 +8,11 @@
         /// <summary>
         /// 设备id
         /// </summary>
-        public long DeviceId { get; set; }
+        public string DeviceId { get; set; } = null!;
         /// <summary>
         /// 手机品牌
         /// </summary>
-        public string DeviceBrand { get; set; } = null!;
+        public string? DeviceBrand { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

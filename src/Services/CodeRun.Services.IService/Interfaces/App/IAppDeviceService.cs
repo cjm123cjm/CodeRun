@@ -11,5 +11,12 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="queryInput"></param>
         /// <returns></returns>
         Task<List<AppDeviceDto>> LoadAppDeviceListAsync(AppDeviceQueryInput queryInput);
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task ReportAsync(ReportInput input);
     }
 }

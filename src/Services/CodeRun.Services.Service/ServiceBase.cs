@@ -18,7 +18,7 @@ namespace CodeRun.Services.Service
         protected IMapper ObjectMapper { get; set; }
         protected string ServerUrl { get; set; }
         protected IdWorker SnowIdWorker { get; set; }
-        protected FolderPath FolderPath { get; set; }  
+        protected FolderPath FolderPath { get; set; }
         protected string UserIp { get; set; }
         public ServiceBase()
         {
@@ -36,7 +36,7 @@ namespace CodeRun.Services.Service
                 }
                 ServerUrl = $"{httpContext.HttpContext.Request.Scheme}://{httpContext.HttpContext.Request.Host}";
 
-                GetClientIPAddress(httpContext.HttpContext);
+                UserIp = GetClientIPAddress(httpContext.HttpContext);
             }
 
             ObjectMapper = LocationStorage.Instance.GetService<IMapper>()!;
