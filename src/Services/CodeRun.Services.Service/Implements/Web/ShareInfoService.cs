@@ -172,23 +172,44 @@ namespace CodeRun.Services.Service.Implements.Web
             var query = SearchQuery(input);
 
             //上一页
-            if (input.Type == 0)
+            if (input.Type == 1)
             {
                 query = query.Where(t => t.ShareId < input.CurrentShareInfoId.Value);
             }
-            else
+            //下一页
+            else if (input.Type == 2)
             {
                 query = query.Where(t => t.ShareId > input.CurrentShareInfoId.Value);
+            }
+            //当前页
+            else if (input.Type == 3)
+            {
+                query = query.Where(t => t.ShareId == input.CurrentShareInfoId.Value);
+            }
+            else
+            {
+                throw new BusinessException("参数错误");
             }
 
             var data = await query.OrderByDescending(t => t.ShareId).Take(1).FirstOrDefaultAsync();
 
             if (data == null)
             {
-                if (input.Type == 0)
+                if (input.Type == 1)
                     throw new BusinessException("已经是第一页了");
-                else
+                else if (input.Type == 2)
                     throw new BusinessException("已经是最后一页了");
+                else
+                    throw new BusinessException("参数不存在");
+            }
+
+            if (input.ReadCount)
+            {
+                data.ReadCount++;
+
+                _shareInfoRepository.Update(data);
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
             return ObjectMapper.Map<ShareInfoAddOrUpdateInput>(data);

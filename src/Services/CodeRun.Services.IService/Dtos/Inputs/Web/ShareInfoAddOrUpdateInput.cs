@@ -29,5 +29,9 @@
         /// 创建时间
         /// </summary>
         public DateTime CreatedTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 是否收藏
+        /// </summary>
+        public bool IsCollect { get; set; }
     }
 }

@@ -15,5 +15,10 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// 回答解释
         /// </summary>
         public string AnswerAnalysis { get; set; } = null!;
+
+        /// <summary>
+        /// 是否收藏
+        /// </summary>
+        public bool IsCollect { get; set; }
     }
 }

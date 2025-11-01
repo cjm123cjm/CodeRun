@@ -31,5 +31,10 @@
         /// 当前的id
         /// </summary>
         public long CurrentQuestionInfoId { get; set; }
+
+        /// <summary>
+        /// 阅读是否增加
+        /// </summary>
+        public bool ReadCountAdd { get; set; }
     }
 }

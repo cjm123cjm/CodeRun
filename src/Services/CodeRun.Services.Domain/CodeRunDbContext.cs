@@ -25,6 +25,7 @@ namespace CodeRun.Services.Domain
         public DbSet<AppFeedback> AppFeedbacks { get; set; }
         public DbSet<AppUpdate> AppUpdates { get; set; }
         public DbSet<AppUserInfo> AppUserInfos { get; set; }
+        public DbSet<AppUserCollect> AppUserCollects { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(options =>

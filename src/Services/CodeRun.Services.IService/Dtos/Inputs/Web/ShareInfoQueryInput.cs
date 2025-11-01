@@ -25,8 +25,12 @@
         public long? CurrentShareInfoId { get; set; }
 
         /// <summary>
-        /// 0-上一页,1-下一页
+        /// 1-上一页,2-下一页,3-当前页
         /// </summary>
         public int Type { get; set; }
+        /// <summary>
+        /// 阅读量是否++
+        /// </summary>
+        public bool ReadCount { get; set; } = false;
     }
 }

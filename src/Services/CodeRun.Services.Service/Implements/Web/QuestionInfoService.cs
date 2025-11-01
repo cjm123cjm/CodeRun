@@ -243,9 +243,14 @@ namespace CodeRun.Services.Service.Implements.Web
                 query = query.Where(t => t.QuestionId < queryInput.CurrentQuestionInfoId);
             }
             //下一页
-            else
+            else if (queryInput.NextType == 2)
             {
                 query = query.Where(t => t.QuestionId > queryInput.CurrentQuestionInfoId);
+            }
+            //当前页
+            else
+            {
+                query = query.Where(t => t.QuestionId == queryInput.CurrentQuestionInfoId);
             }
 
             var question = await query.OrderByDescending(t => t.CreatedTime).Take(1).FirstOrDefaultAsync();
@@ -254,8 +259,17 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 if (queryInput.NextType == 1)
                     throw new BusinessException("已经是第一条了");
-                else
+                else if (queryInput.NextType == 2)
                     throw new BusinessException("已经是最后一条了");
+                else
+                    throw new BusinessException("数据不存在");
+            }
+
+            if (queryInput.ReadCountAdd)
+            {
+                question.ReadCount++;
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
             return ObjectMapper.Map<QuestionInfoAddOrUpdateInput>(question);

@@ -235,6 +235,8 @@ namespace CodeRun.Services.AdminApi.Controllers
         [PermissionAuthorize(PermissionCodeEnum.question_list)]
         public async Task<ResponseDto> ShowQuestionInfoDetailNext(QuestionInfoQueryInput queryInput)
         {
+            queryInput.ReadCountAdd = false;
+
             var data = await _questionInfoService.ShowQuestionInfoDetailNextAsync(queryInput);
 
             return new ResponseDto(data);
