@@ -1,6 +1,5 @@
 ﻿using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeRun.Services.AdminApi.Controllers

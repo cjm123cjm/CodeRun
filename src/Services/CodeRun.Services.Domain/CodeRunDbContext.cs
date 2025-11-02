@@ -26,6 +26,8 @@ namespace CodeRun.Services.Domain
         public DbSet<AppUpdate> AppUpdates { get; set; }
         public DbSet<AppUserInfo> AppUserInfos { get; set; }
         public DbSet<AppUserCollect> AppUserCollects { get; set; }
+        public DbSet<AppExam> AppExams { get; set; }
+        public DbSet<AppExamQuestion> AppExamQuestions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(options =>
