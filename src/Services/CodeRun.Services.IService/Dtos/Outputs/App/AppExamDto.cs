@@ -1,4 +1,7 @@
-﻿namespace CodeRun.Services.IService.Dtos.Outputs.App
+﻿using CodeRun.Services.Domain.Entities.App;
+using CodeRun.Services.Domain.Entities.Web;
+
+namespace CodeRun.Services.IService.Dtos.Outputs.App
 {
     /// <summary>
     /// 在线考试输出参数
@@ -37,5 +40,10 @@
         /// 备注
         /// </summary>
         public string? Remark { get; set; }
+
+        /// <summary>
+        /// 考题
+        /// </summary>
+        public List<UserExamQuestionListDto> ExamQuestionLists { get; set; } = new();
     }
 }

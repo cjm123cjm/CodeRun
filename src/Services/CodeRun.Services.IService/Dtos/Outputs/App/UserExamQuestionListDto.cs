@@ -1,10 +1,13 @@
-﻿namespace CodeRun.Services.Domain.Entities.Web
+﻿using CodeRun.Services.IService.Dtos.Outputs.Web;
+
+namespace CodeRun.Services.IService.Dtos.Outputs.App
 {
-    /// <summary>
-    /// 考试题目
-    /// </summary>
-    public class ExamQuestion
+    public class UserExamQuestionListDto
     {
+        /// <summary>
+        /// AppExamQuestionId
+        /// </summary>
+        public long AppExamQuestionId { get; set; }
         /// <summary>
         /// 考试题目id
         /// </summary>
@@ -14,21 +17,9 @@
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 分类id
-        /// </summary>
-        public long CategoryId { get; set; }
-        /// <summary>
-        /// 分类名称
-        /// </summary>
-        public string CategoryName { get; set; }
-        /// <summary>
         /// 难度等级
         /// </summary>
         public int DifficultyLevel { get; set; }
-        /// <summary>
-        /// 问题类型:0-判断，1-单选题，2-多选
-        /// </summary>
-        public int QuestionType { get; set; }
         /// <summary>
         /// 问题描述
         /// </summary>
@@ -42,24 +33,28 @@
         /// </summary>
         public string AnswerAnalysis { get; set; }
         /// <summary>
-        /// 创建时间
+        /// 问题类型:0-判断，1-单选题，2-多选
         /// </summary>
-        public DateTime CreatedTime { get; set; } = DateTime.Now;
+        public int QuestionType { get; set; }
         /// <summary>
-        /// 状态:0-未发布 1-已发布
+        /// 用户答案
         /// </summary>
-        public int Status { get; set; }
+        public string? UserAnswer { get; set; }
         /// <summary>
-        /// 创建人
+        /// 0:未作答,1:正确,2:错误
         /// </summary>
-        public long CreatedUserId { get; set; }
+        public int AnswerStatus { get; set; }
         /// <summary>
-        /// 创建人名称
+        /// 考试id
         /// </summary>
-        public string CreatedUserName { get; set; }
+        public long ExamId { get; set; }
         /// <summary>
-        /// 0-内部 1-外部投稿
+        /// 是否收藏
         /// </summary>
-        public int PostUserType { get; set; }
+        public bool HaveCollect { get; set; }
+        /// <summary>
+        /// 问题选项
+        /// </summary>
+        public List<ExamQuestionItemDto> QuestionItemList { get; set; } = new();
     }
 }

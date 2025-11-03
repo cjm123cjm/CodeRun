@@ -1,4 +1,5 @@
-﻿using CodeRun.Services.IService.Dtos.Outputs.App;
+﻿using CodeRun.Services.IService.Dtos.Inputs.App;
+using CodeRun.Services.IService.Dtos.Outputs.App;
 
 namespace CodeRun.Services.IService.Interfaces.App
 {
@@ -16,5 +17,33 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="categoryIds"></param>
         /// <returns></returns>
         Task<AppExamDto> CreateExamAsync(string categoryIds);
+
+        /// <summary>
+        /// 获取考试和考题信息
+        /// </summary>
+        /// <param name="examId"></param>
+        /// <returns></returns>
+        Task<AppExamDto> GetExamQuestionAsync(long examId);
+
+        /// <summary>
+        /// 开始考试
+        /// </summary>
+        /// <param name="examId"></param>
+        /// <returns></returns>
+        Task StartExamAsync(long examId);
+
+        /// <summary>
+        /// 提交考试
+        /// </summary>
+        /// <param name="postExamInput"></param>
+        /// <returns></returns>
+        Task<AppExamDto> PostExamAsync(PostExamInput postExamInput);
+
+        /// <summary>
+        /// 删除考试
+        /// </summary>
+        /// <param name="examId"></param>
+        /// <returns></returns>
+        Task DeleteExamAsync(long examId);
     }
 }
