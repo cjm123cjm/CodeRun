@@ -29,6 +29,20 @@ namespace CodeRun.Services.Service.Implements.Web
         }
 
         /// <summary>
+        /// 查询不分页
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        public async Task<List<QuestionInfoDto>> LoadQuestionInfoWhereListAsync(QuestionInfoQueryInput queryInput)
+        {
+            IQueryable<QuestionInfo> query = SearchQuery(queryInput);
+
+            var questionDtos = await query.OrderByDescending(t => t.CreatedTime).ProjectTo<QuestionInfoDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
+
+            return questionDtos;
+        }
+
+        /// <summary>
         /// 加载八股文列表
         /// </summary>
         /// <param name="queryInput"></param>
@@ -296,6 +310,10 @@ namespace CodeRun.Services.Service.Implements.Web
             if (!string.IsNullOrEmpty(queryInput.CreatedUserName))
             {
                 query = query.Where(t => t.CreatedUserName.Contains(queryInput.CreatedUserName));
+            }
+            if (queryInput.QuestionIds != null && queryInput.QuestionIds.Any())
+            {
+                query = query.Where(t => queryInput.QuestionIds.Contains(t.QuestionId));
             }
 
             return query;

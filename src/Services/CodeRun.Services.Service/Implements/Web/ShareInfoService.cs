@@ -45,8 +45,28 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 query = query.Where(t => t.CreatedUserName == queryInput.CreatedUserName);
             }
+            if (queryInput.ShareIds != null && queryInput.ShareIds.Any())
+            {
+                query = query.Where(t => queryInput.ShareIds.Contains(t.ShareId));
+            }
 
             return query;
+        }
+
+        /// <summary>
+        /// 不分页查询列表
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        public async Task<List<ShareInfoDto>> LoadShareWhereListAsync(ShareInfoQueryInput queryInput)
+        {
+            var query = SearchQuery(queryInput);
+
+            var shareInfoDtos = await query.OrderByDescending(t => t.ShareId)
+                                           .ProjectTo<ShareInfoDto>(ObjectMapper.ConfigurationProvider)
+                                           .ToListAsync();
+
+            return shareInfoDtos;
         }
 
         /// <summary>

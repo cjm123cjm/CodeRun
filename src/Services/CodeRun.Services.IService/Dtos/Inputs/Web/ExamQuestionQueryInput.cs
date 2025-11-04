@@ -38,5 +38,10 @@
         /// 0-上一页,1-下一页
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 根据考题id查询
+        /// </summary>
+        public List<long> ExamQuestionIds { get; set; } = new List<long>();
     }
 }

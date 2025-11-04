@@ -55,5 +55,12 @@ namespace CodeRun.Services.IService.Interfaces.Web
         /// <param name="queryInput"></param>
         /// <returns></returns>
         Task<QuestionInfoAddOrUpdateInput> ShowQuestionInfoDetailNextAsync(QuestionInfoQueryInput queryInput);
+
+        /// <summary>
+        /// 查询不分页
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        Task<List<QuestionInfoDto>> LoadQuestionInfoWhereListAsync(QuestionInfoQueryInput queryInput);
     }
 }

@@ -17,7 +17,7 @@ namespace CodeRun.Services.Service.Implements.App
         private readonly IUnitOfWork _unitOfWork;
 
         public FeedbackService(
-            IAppFeedbackRepository feedbackRepository, 
+            IAppFeedbackRepository feedbackRepository,
             IUnitOfWork unitOfWork)
         {
             _feedbackRepository = feedbackRepository;
@@ -49,6 +49,14 @@ namespace CodeRun.Services.Service.Implements.App
             {
                 query = query.Where(t => t.NickName.Contains(queryInput.UserName));
             }
+            if (queryInput.UserId.HasValue)
+            {
+                query = query.Where(t => t.UserId == queryInput.UserId.Value);
+            }
+            if (queryInput.ParentFeekbackId.HasValue)
+            {
+                query = query.Where(t => t.FeedbackParentId == queryInput.ParentFeekbackId.Value);
+            }
 
             var totalCount = await query.CountAsync();
 
@@ -73,7 +81,7 @@ namespace CodeRun.Services.Service.Implements.App
         public async Task<List<FeedbackDto>> FeedbackDetailAsync(long feedbackId)
         {
             return await _feedbackRepository.QueryWhere(t => t.FeedbackId == feedbackId || t.FeedbackParentId == feedbackId)
-                  .ProjectTo<FeedbackDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
+                  .ProjectTo<FeedbackDto>(ObjectMapper.ConfigurationProvider).OrderByDescending(t => t.ClientLastSendTime).ToListAsync();
         }
 
         /// <summary>
@@ -85,9 +93,16 @@ namespace CodeRun.Services.Service.Implements.App
         {
             //修改父级状态
             var parentFeedback = await _feedbackRepository.GetByIdAsync(replayFeedbackInput.FeedbackId);
-            if(parentFeedback == null)
+            if (parentFeedback == null)
             {
                 throw new BusinessException("参数错误");
+            }
+            if (replayFeedbackInput.UserId.HasValue)
+            {
+                if (parentFeedback.UserId != replayFeedbackInput.UserId)
+                {
+                    throw new BusinessException("参数错误");
+                }
             }
             AppFeedback appFeedback = new AppFeedback
             {

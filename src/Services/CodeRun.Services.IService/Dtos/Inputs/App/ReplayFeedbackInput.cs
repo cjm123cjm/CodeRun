@@ -13,5 +13,10 @@
         /// 反馈id
         /// </summary>
         public long FeedbackId { get; set; }
+
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public long? UserId { get; set; }
     }
 }

@@ -42,5 +42,9 @@
         /// 收藏数量
         /// </summary>
         public int CollectCount { get; set; }
+        /// <summary>
+        /// 收藏id
+        /// </summary>
+        public long CollectId { get; set; }
     }
 }

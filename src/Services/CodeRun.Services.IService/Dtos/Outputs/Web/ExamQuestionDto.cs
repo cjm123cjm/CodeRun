@@ -46,5 +46,9 @@
         /// 0-内部 1-外部投稿
         /// </summary>
         public int PostUserType { get; set; }
+        /// <summary>
+        /// 收藏id
+        /// </summary>
+        public long CollectId { get; set; }
     }
 }

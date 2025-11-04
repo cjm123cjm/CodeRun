@@ -21,5 +21,14 @@
         /// 创建人
         /// </summary>
         public string? UserName { get; set; }
+
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public long? UserId { get; set; }
+        /// <summary>
+        /// pid
+        /// </summary>
+        public long? ParentFeekbackId { get; set; }
     }
 }

@@ -39,5 +39,25 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="loginInput"></param>
         /// <returns></returns>
         Task<AppLoginDto> AutoLoginAsync(AutoLoginInput loginInput);
+
+        /// <summary>
+        /// 获取个人信息
+        /// </summary>
+        /// <returns></returns>
+        Task<AppUserInfoDto> GetUserInfoAsync();
+
+        /// <summary>
+        /// 保存用户头像地址
+        /// </summary>
+        /// <param name="avatarPath"></param>
+        /// <returns></returns>
+        Task UpDateUserAvatarAsync(string avatarPath);
+
+        /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="userInfoInput"></param>
+        /// <returns></returns>
+        Task UpdateUserInfoAsync(UpdateUserInfoInput userInfoInput);
     }
 }

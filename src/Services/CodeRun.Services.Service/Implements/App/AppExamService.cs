@@ -13,6 +13,7 @@ using CodeRun.Services.Domain.Entities.App;
 using CodeRun.Services.Domain.UnitOfWork;
 using CodeRun.Services.IService.Dtos.Outputs.Web;
 using CodeRun.Services.IService.Dtos.Inputs.App;
+using CodeRun.Services.IService.Dtos;
 
 namespace CodeRun.Services.Service.Implements.App
 {
@@ -39,6 +40,33 @@ namespace CodeRun.Services.Service.Implements.App
             _unitOfWork = unitOfWork;
             _questionItemRepository = questionItemRepository;
             _userCollectRepository = userCollectRepository;
+        }
+
+        /// <summary>
+        /// 获取用户已考试列表
+        /// </summary>
+        /// <param name="pageInput"></param>
+        /// <returns></returns>
+        public async Task<PageDto<AppExamDto>> LoadUserExamAsync(PageInput pageInput)
+        {
+            var query = _examRepository.QueryWhere(t => t.UserId == LoginUserId);
+
+            var totalCount = await query.CountAsync();
+
+            var exams = await query.OrderByDescending(t => t.CreatedTime)
+                                   .Skip((pageInput.PageIndex - 1) * pageInput.PageSize)
+                                   .Take(pageInput.PageSize)
+                                   .ToListAsync();
+
+            var examDtos = ObjectMapper.Map<List<AppExamDto>>(exams);
+
+            return new PageDto<AppExamDto>
+            {
+                Data = examDtos,
+                PageIndex = pageInput.PageIndex,
+                PageSize = pageInput.PageSize,
+                TotalCount = totalCount
+            };
         }
 
         /// <summary>
@@ -279,6 +307,57 @@ namespace CodeRun.Services.Service.Implements.App
             _examRepository.Delete(exam);
 
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 加载用户错题集133333
+        /// </summary>
+        /// <param name="pageInput"></param>
+        /// <returns></returns>
+        public async Task<PageDto<UserExamQuestionListDto>> LoadUserWroingExamAsync(PageInput pageInput)
+        {
+            var query = _questionRepository.QueryWhere(t => t.UserId == LoginUserId && t.AnswerStatus == 2).OrderByDescending(t => t.ExamId);
+
+            var total = await query.CountAsync();
+
+            //查询考题
+            var questions = await query.OrderByDescending(t => t.ExamId)
+                                       .Skip((pageInput.PageIndex - 1) * pageInput.PageSize)
+                                       .ToListAsync();
+
+            var questionIds = questions.Select(t => t.QuestionId).ToList();
+
+            var userExamQuestions = await _examQuestionRepository.QueryWhere(t => questionIds.Contains(t.QuestionId))
+                                                                 .Select(t => new UserExamQuestionListDto
+                                                                 {
+                                                                     QuestionId = t.QuestionId,
+                                                                     Title = t.Title,
+                                                                     DifficultyLevel = t.DifficultyLevel,
+                                                                     Question = t.Question,
+                                                                     QuestionAnswer = t.QuestionAnswer,
+                                                                     AnswerAnalysis = t.AnswerAnalysis,
+                                                                     QuestionType = t.QuestionType
+                                                                 }).ToListAsync();
+            foreach (var item in userExamQuestions)
+            {
+                var first = questions.FirstOrDefault(t => t.QuestionId == item.QuestionId);
+                if (first != null)
+                {
+                    item.UserAnswer = first.UserAnswer;
+                    item.AnswerStatus = first.AnswerStatus;
+                    item.ExamId = first.ExamId;
+                    item.AppExamQuestionId = first.Id;
+                }
+            }
+
+
+            return new PageDto<UserExamQuestionListDto>
+            {
+                Data = userExamQuestions,
+                TotalCount = total,
+                PageIndex = pageInput.PageIndex,
+                PageSize = pageInput.PageSize
+            };
         }
     }
 }

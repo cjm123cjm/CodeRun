@@ -2,6 +2,7 @@
 using CodeRun.Services.Domain.Entities.App;
 using CodeRun.Services.Domain.IRepository.App;
 using CodeRun.Services.Domain.UnitOfWork;
+using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs.App;
 using CodeRun.Services.IService.Interfaces.App;
 using Microsoft.EntityFrameworkCore;
@@ -74,5 +75,70 @@ namespace CodeRun.Services.Service.Implements.App
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 获取用户收藏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<PageDto<AppUserCollect>> GetUserAppCollectByUserIdIdAsync(AppUserCollectQueryInput queryInput)
+        {
+            var query = _userCollectRepository.QueryWhere(t => t.UserId == queryInput.UserId && t.CollectType == queryInput.CollectType);
+
+            var total = await query.CountAsync();
+
+            var collects = await _userCollectRepository.QueryWhere(t => t.UserId == queryInput.UserId && t.CollectType == queryInput.CollectType)
+                                                .OrderByDescending(t => t.CollectTime)
+                                                .Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
+                                               .ToListAsync();
+            PageDto<AppUserCollect> pageDto = new PageDto<AppUserCollect>
+            {
+                TotalCount = total,
+                Data = collects
+            };
+            return pageDto;
+        }
+
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="showNextDetailInput"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task<AppUserCollect> ShowDetailNextAsync(ShowNextDetailInput showNextDetailInput)
+        {
+            var query = _userCollectRepository.QueryWhere(t => t.UserId == LoginUserId && t.CollectType == showNextDetailInput.CollectType);
+
+            if (showNextDetailInput.Type == 1)
+            {
+                query = query.Where(t => t.CollectId < showNextDetailInput.CurrentId);
+            }
+            else if (showNextDetailInput.Type == 2)
+            {
+                query = query.Where(t => t.CollectId > showNextDetailInput.CurrentId);
+            }
+            else if (showNextDetailInput.Type == 3)
+            {
+                query = query.Where(t => t.CollectId == showNextDetailInput.CurrentId);
+            }
+            else
+            {
+                throw new BusinessException("参数错误");
+            }
+
+            var collect = await query.OrderByDescending(t => t.CollectTime).FirstOrDefaultAsync();
+
+            if (collect == null)
+            {
+                if (showNextDetailInput.Type == 1)
+                    throw new BusinessException("已经是第一页了");
+                else if (showNextDetailInput.Type == 2)
+                    throw new BusinessException("已经是最后一页了");
+                else
+                    throw new BusinessException("数据不存在");
+            }
+
+            return collect;
+        }
     }
 }

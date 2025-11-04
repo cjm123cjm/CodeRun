@@ -55,6 +55,8 @@ namespace CodeRun.Services.AdminApi.Controllers
         [PermissionAuthorize(PermissionCodeEnum.app_feedback_replay)]
         public async Task<ResponseDto> ReplayFeedback(ReplayFeedbackInput replayFeedbackInput)
         {
+            replayFeedbackInput.UserId = null;
+
             await _feedbackService.ReplayFeedbackAsync(replayFeedbackInput);
 
             return new ResponseDto();

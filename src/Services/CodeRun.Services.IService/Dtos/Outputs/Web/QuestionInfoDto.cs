@@ -47,8 +47,8 @@
         /// </summary>
         public int CollectCount { get; set; }
         /// <summary>
-        /// 0-内部 1-外部投稿
+        /// 收藏id
         /// </summary>
-        public int PostUserType { get; set; }
+        public long CollectId { get; set; }
     }
 }

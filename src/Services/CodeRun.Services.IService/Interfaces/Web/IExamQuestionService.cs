@@ -58,5 +58,12 @@ namespace CodeRun.Services.IService.Interfaces.Web
         /// <param name="importDtos"></param>
         /// <returns></returns>
         Task BatchImportExamQuestionAsync(List<ExamQuestionImportDto> importDtos);
+
+        /// <summary>
+        /// 查询列表不分页
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        Task<List<ExamQuestionDto>> LoadExamQuestionWhereListAsync(ExamQuestionQueryInput queryInput);
     }
 }

@@ -36,5 +36,9 @@
         /// 阅读是否增加
         /// </summary>
         public bool ReadCountAdd { get; set; }
+        /// <summary>
+        /// ids
+        /// </summary>
+        public List<long> QuestionIds { get; set; } = new List<long>();
     }
 }

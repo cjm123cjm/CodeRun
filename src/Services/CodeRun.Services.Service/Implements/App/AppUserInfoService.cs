@@ -1,4 +1,5 @@
-﻿using CodeRun.Services.Domain.CustomerException;
+﻿using CodeRun.Services.Common;
+using CodeRun.Services.Domain.CustomerException;
 using CodeRun.Services.Domain.Entities.App;
 using CodeRun.Services.Domain.IRepository.App;
 using CodeRun.Services.Domain.UnitOfWork;
@@ -210,6 +211,63 @@ namespace CodeRun.Services.Service.Implements.App
             await _unitOfWork.SaveChangesAsync();
 
             return appLoginDto;
+        }
+
+        /// <summary>
+        /// 获取个人信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AppUserInfoDto> GetUserInfoAsync()
+        {
+            var user = await _userInfoRepository.GetByIdAsync(LoginUserId);
+
+            return ObjectMapper.Map<AppUserInfoDto>(user);
+        }
+
+        /// <summary>
+        /// 保存用户头像地址
+        /// </summary>
+        /// <param name="avatarPath"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task UpDateUserAvatarAsync(string avatarPath)
+        {
+            var user = await _userInfoRepository.GetByIdAsync(LoginUserId);
+            if (user == null)
+            {
+                throw new BusinessException("用户不存在");
+            }
+
+            user.Avatar = avatarPath;
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="userInfoInput"></param>
+        /// <returns></returns>
+        public async Task UpdateUserInfoAsync(UpdateUserInfoInput userInfoInput)
+        {
+            var user = await _userInfoRepository.GetByIdAsync(LoginUserId);
+            if (user == null)
+            {
+                throw new BusinessException("用户不存在");
+            }
+
+            user.Sex = userInfoInput.Sex;
+            if (!string.IsNullOrWhiteSpace(userInfoInput.OldPassword))
+            {
+                if (user.Password != MD5Util.MD5Encrypt(userInfoInput.OldPassword))
+                {
+                    throw new BusinessException(message: "旧密码不正确");
+                }
+
+                user.Password = MD5Util.MD5Encrypt(userInfoInput.NewPassword);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

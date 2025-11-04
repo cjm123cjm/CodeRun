@@ -32,5 +32,10 @@
         /// 阅读量是否++
         /// </summary>
         public bool ReadCount { get; set; } = false;
+
+        /// <summary>
+        /// 根据id查
+        /// </summary>
+        public List<long> ShareIds { get; set; } = new List<long>();
     }
 }

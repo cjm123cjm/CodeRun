@@ -1,4 +1,5 @@
 ﻿using CodeRun.Services.Domain.Entities.App;
+using CodeRun.Services.IService.Dtos;
 using CodeRun.Services.IService.Dtos.Inputs.App;
 
 namespace CodeRun.Services.IService.Interfaces.App
@@ -20,5 +21,19 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="appUser"></param>
         /// <returns></returns>
         Task AddOrCancelCollect(AppUserCollectAddOrUpdate appUser);
+
+        /// <summary>
+        /// 获取用户收藏
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<PageDto<AppUserCollect>> GetUserAppCollectByUserIdIdAsync(AppUserCollectQueryInput queryInput);
+
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="showNextDetailInput"></param>
+        /// <returns></returns>
+        Task<AppUserCollect> ShowDetailNextAsync(ShowNextDetailInput showNextDetailInput);
     }
 }

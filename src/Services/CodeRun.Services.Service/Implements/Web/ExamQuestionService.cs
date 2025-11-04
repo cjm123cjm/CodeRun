@@ -63,8 +63,27 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 query = query.Where(t => t.CreatedUserName.Contains(queryInput.CreatedUserName));
             }
+            if (queryInput.ExamQuestionIds != null && queryInput.ExamQuestionIds.Any())
+            {
+                query = query.Where(t => queryInput.ExamQuestionIds.Contains(t.QuestionId));
+            }
 
             return query;
+        }
+
+        /// <summary>
+        /// 查询列表不分页
+        /// </summary>
+        /// <param name="queryInput"></param>
+        /// <returns></returns>
+        public async Task<List<ExamQuestionDto>> LoadExamQuestionWhereListAsync(ExamQuestionQueryInput queryInput)
+        {
+            var query = SearchQuery(queryInput);
+
+            var examQuestion = await query.OrderByDescending(t => t.QuestionId)
+                                          .ProjectTo<ExamQuestionDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
+
+            return examQuestion;
         }
 
         /// <summary>

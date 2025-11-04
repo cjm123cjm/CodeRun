@@ -1,10 +1,17 @@
-﻿using CodeRun.Services.IService.Dtos.Inputs.App;
+﻿using CodeRun.Services.IService.Dtos;
+using CodeRun.Services.IService.Dtos.Inputs.App;
 using CodeRun.Services.IService.Dtos.Outputs.App;
 
 namespace CodeRun.Services.IService.Interfaces.App
 {
     public interface IAppExamService
     {
+        /// <summary>
+        /// 获取用户已考试列表
+        /// </summary>
+        /// <returns></returns>
+        Task<PageDto<AppExamDto>> LoadUserExamAsync(PageInput pageInput);
+
         /// <summary>
         /// 查询用户是否有未完成的考试
         /// </summary>
@@ -45,5 +52,12 @@ namespace CodeRun.Services.IService.Interfaces.App
         /// <param name="examId"></param>
         /// <returns></returns>
         Task DeleteExamAsync(long examId);
+
+        /// <summary>
+        /// 加载用户错题集
+        /// </summary>
+        /// <param name="pageInput"></param>
+        /// <returns></returns>
+        Task<PageDto<UserExamQuestionListDto>> LoadUserWroingExamAsync(PageInput pageInput);
     }
 }
