@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.AppApi", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.Domain", "Services\CodeRun.Services.Domain\CodeRun.Services.Domain.csproj", "{F94B278D-9939-4C08-8444-949CA2B7EE38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeRun.Services.IService", "Services\CodeRun.Services.IService\CodeRun.Services.IService.csproj", "{28614128-BA31-483B-80C9-45C15DE4EAA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.IService", "Services\CodeRun.Services.IService\CodeRun.Services.IService.csproj", "{28614128-BA31-483B-80C9-45C15DE4EAA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeRun.Services.Service", "Services\CodeRun.Services.Service\CodeRun.Services.Service.csproj", "{EAD85B48-521D-479E-8902-EF81AD884834}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.Service", "Services\CodeRun.Services.Service\CodeRun.Services.Service.csproj", "{EAD85B48-521D-479E-8902-EF81AD884834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeRun.Services.Common", "Services\CodeRun.Services.Common\CodeRun.Services.Common.csproj", "{A7C3ADA9-1F4D-4464-9839-E5E7D3FD04BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeRun.Services.Common", "Services\CodeRun.Services.Common\CodeRun.Services.Common.csproj", "{A7C3ADA9-1F4D-4464-9839-E5E7D3FD04BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
