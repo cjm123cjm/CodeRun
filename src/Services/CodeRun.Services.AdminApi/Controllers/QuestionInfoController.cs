@@ -12,7 +12,7 @@ using CodeRun.Services.IService.Dtos.Inputs.Web;
 
 namespace CodeRun.Services.AdminApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class QuestionInfoController : BaseController
     {

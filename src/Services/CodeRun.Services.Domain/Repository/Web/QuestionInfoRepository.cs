@@ -6,7 +6,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class QuestionInfoRepository : BaseRepository<QuestionInfo>, IQuestionInfoRepository
     {
-        protected QuestionInfoRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public QuestionInfoRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

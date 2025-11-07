@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppUpdateRepository : BaseRepository<AppUpdate>, IAppUpdateRepository
     {
-        protected AppUpdateRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppUpdateRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

@@ -6,7 +6,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class MenuRepository : BaseRepository<Menu>, IMenuRepository
     {
-        protected MenuRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public MenuRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

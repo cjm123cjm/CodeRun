@@ -133,8 +133,6 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-app.UseSession();
-
 //»œ÷§
 app.UseAuthentication();
 // ⁄»®

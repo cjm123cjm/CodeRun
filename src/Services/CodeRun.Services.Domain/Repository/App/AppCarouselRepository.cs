@@ -8,7 +8,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppCarouselRepository : BaseRepository<AppCarousel>, IAppCarouselRepository
     {
-        protected AppCarouselRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppCarouselRepository(CodeRunDbContext context) : base(context)
         {
         }
 

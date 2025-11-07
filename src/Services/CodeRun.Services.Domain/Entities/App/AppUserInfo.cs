@@ -40,7 +40,7 @@
         /// <summary>
         /// 最后使用的设备id
         /// </summary>
-        public string LastUseDeviceId { get; set; }
+        public string? LastUseDeviceId { get; set; }
         /// <summary>
         /// 最后使用的手机品牌
         /// </summary>

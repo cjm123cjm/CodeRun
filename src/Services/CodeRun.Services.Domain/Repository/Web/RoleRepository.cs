@@ -6,7 +6,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        protected RoleRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public RoleRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

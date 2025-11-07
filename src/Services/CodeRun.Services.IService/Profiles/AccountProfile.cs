@@ -5,6 +5,9 @@ using CodeRun.Services.IService.Dtos.Outputs.Web;
 
 namespace CodeRun.Services.IService.Profiles
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AccountProfile : Profile
     {
         public AccountProfile()

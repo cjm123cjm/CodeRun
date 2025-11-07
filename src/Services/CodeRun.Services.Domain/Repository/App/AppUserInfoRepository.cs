@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppUserInfoRepository : BaseRepository<AppUserInfo>, IAppUserInfoRepository
     {
-        protected AppUserInfoRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppUserInfoRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

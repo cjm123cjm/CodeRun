@@ -150,6 +150,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
+        [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.settings_account_del)]
         public async Task<ResponseDto> DeleteAccountAsync(long accountId)
         {

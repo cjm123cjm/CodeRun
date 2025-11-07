@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppExamRepository : BaseRepository<AppExam>, IAppExamRepository
     {
-        protected AppExamRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppExamRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

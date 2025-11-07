@@ -6,7 +6,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class ShareInfoRepository : BaseRepository<ShareInfo>, IShareInfoRepository
     {
-        protected ShareInfoRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public ShareInfoRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

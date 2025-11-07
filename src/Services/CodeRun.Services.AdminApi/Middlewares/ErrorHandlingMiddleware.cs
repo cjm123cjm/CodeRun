@@ -78,7 +78,7 @@ namespace CodeRun.Services.AdminApi.Middlewares
         {
             var result = JsonConvert.SerializeObject(
                 new ResponseDto
-                { Code = statusCode, Message = msg, IsSuccess = true },
+                { Code = statusCode, Message = msg, IsSuccess = false },
             new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()

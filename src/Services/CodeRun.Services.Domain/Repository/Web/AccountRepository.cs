@@ -6,7 +6,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
-        protected AccountRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AccountRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

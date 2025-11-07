@@ -35,6 +35,72 @@ namespace CodeRun.Services.Domain
                 options.HasKey(t => t.UserId);
                 options.HasIndex(t => t.Phone).IsUnique();
             });
+
+            modelBuilder.Entity<Menu>(options =>
+            {
+                options.HasKey(t => t.MenuId);
+            });
+            modelBuilder.Entity<Role>(options =>
+            {
+                options.HasKey(t => t.RoleId);
+            });
+            modelBuilder.Entity<RoleForMenu>(options =>
+            {
+                options.HasKey(t => new { t.RoleId, t.MenuId });
+            });
+            modelBuilder.Entity<Category>(options =>
+            {
+                options.HasKey(t => t.CategoryId);
+            });
+            modelBuilder.Entity<QuestionInfo>(options =>
+            {
+                options.HasKey(t => t.QuestionId);
+            });
+            modelBuilder.Entity<ExamQuestion>(options =>
+            {
+                options.HasKey(t => t.QuestionId);
+            });
+            modelBuilder.Entity<ExamQuestionItem>(options =>
+            {
+                options.HasKey(t => t.ItemId);
+            });
+            modelBuilder.Entity<ShareInfo>(options =>
+            {
+                options.HasKey(t => t.ShareId);
+            });
+
+            modelBuilder.Entity<AppCarousel>(options =>
+            {
+                options.HasKey(t => t.CarouselId);
+            });
+            modelBuilder.Entity<AppDevice>(options =>
+            {
+                options.HasKey(t => t.DeviceId);
+            });
+            modelBuilder.Entity<AppFeedback>(options =>
+            {
+                options.HasKey(t => t.FeedbackId);
+            });
+            modelBuilder.Entity<AppUpdate>(options =>
+            {
+                options.HasKey(t => t.Id);
+            });
+            modelBuilder.Entity<AppUserInfo>(options =>
+            {
+                options.HasKey(t => t.UserId);
+            });
+            modelBuilder.Entity<AppUserCollect>(options =>
+            {
+                options.HasKey(t => t.CollectId);
+            });
+            modelBuilder.Entity<AppExam>(options =>
+            {
+                options.HasKey(t => t.ExamId);
+            });
+            modelBuilder.Entity<AppExamQuestion>(options =>
+            {
+                options.HasKey(t => t.Id);
+            });
         }
     }
 }

@@ -1,14 +1,6 @@
 ﻿using CodeRun.Services.Domain.IRepository.Web;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CodeRun.Services.Domain.Repository.Web
 {
@@ -16,13 +8,11 @@ namespace CodeRun.Services.Domain.Repository.Web
     {
         protected readonly CodeRunDbContext _context;
         protected readonly DbSet<Entity> _dbSet;
-        protected readonly ILogger _logger;
 
-        protected BaseRepository(CodeRunDbContext context, ILogger logger)
+        public BaseRepository(CodeRunDbContext context)
         {
             _context = context;
             _dbSet = context.Set<Entity>();
-            _logger = logger;
         }
 
         /// <summary>

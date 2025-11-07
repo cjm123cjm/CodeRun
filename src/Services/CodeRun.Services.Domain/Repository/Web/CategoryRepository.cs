@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 {
     public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
-        protected CategoryRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public CategoryRepository(CodeRunDbContext context) : base(context)
         {
         }
 

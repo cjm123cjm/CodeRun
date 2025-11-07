@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppFeedbackRepository : BaseRepository<AppFeedback>, IAppFeedbackRepository
     {
-        protected AppFeedbackRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppFeedbackRepository(CodeRunDbContext context) : base(context)
         {
         }
     }

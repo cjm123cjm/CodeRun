@@ -20,11 +20,11 @@
         /// <summary>
         /// 封面路径
         /// </summary>
-        public string CoverPath { get; set; }
+        public string? CoverPath { get; set; }
         /// <summary>
         /// 内容
         /// </summary>
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -40,7 +40,7 @@
         /// <summary>
         /// 创建人名称
         /// </summary>
-        public string CreatedUserName { get; set; }
+        public string CreatedUserName { get; set; } = null!;
         /// <summary>
         /// 阅读数量
         /// </summary>

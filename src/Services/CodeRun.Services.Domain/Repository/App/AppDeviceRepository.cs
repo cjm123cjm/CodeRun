@@ -7,7 +7,7 @@ namespace CodeRun.Services.Domain.Repository.App
 {
     public class AppDeviceRepository : BaseRepository<AppDevice>, IAppDeviceRepository
     {
-        protected AppDeviceRepository(CodeRunDbContext context, ILogger logger) : base(context, logger)
+        public AppDeviceRepository(CodeRunDbContext context) : base(context)
         {
         }
     }
