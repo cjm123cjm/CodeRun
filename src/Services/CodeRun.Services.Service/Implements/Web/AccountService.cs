@@ -89,7 +89,7 @@ namespace CodeRun.Services.Service.Implements.Web
         /// <returns></returns>
         public async Task<LoginDto> LoginAsync(LoginInput loginInput)
         {
-            var user = await _accountRepository.QueryWhere(t => t.UserName == loginInput.UserName && t.Password == loginInput.Password).FirstOrDefaultAsync();
+            var user = await _accountRepository.QueryWhere(t => t.Phone == loginInput.UserName && t.Password == loginInput.Password).FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new BusinessException("用户名密码错误");
@@ -135,6 +135,8 @@ namespace CodeRun.Services.Service.Implements.Web
 
             //token
             loginDto.Token = _jwtTokenGenerator.GenerateToken(accountDto, loginDto.PermissionCodes);
+
+            loginDto.Menus = menuTreeDtos;
 
             return loginDto;
         }

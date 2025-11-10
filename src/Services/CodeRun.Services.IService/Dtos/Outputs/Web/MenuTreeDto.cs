@@ -42,6 +42,6 @@
         /// </summary>
         public string Icon { get; set; }
 
-        public List<MenuTreeDto> ChildMenu { get; set; }
+        public List<MenuTreeDto> ChildMenu { get; set; }=new List<MenuTreeDto>();
     }
 }

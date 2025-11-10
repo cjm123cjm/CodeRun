@@ -31,7 +31,11 @@ namespace CodeRun.Services.Service
                     LoginUserId = Convert.ToInt64(httpContext.HttpContext.User.Claims.First(t => t.Type == "UserId").Value);
                     Roles = httpContext.HttpContext.User.Claims.First(t => t.Type == "Roles").Value;
                     LoginUserName = httpContext.HttpContext.User.Claims.First(t => t.Type == "UserName").Value.ToString();
-                    Email = httpContext.HttpContext.User.Claims.First(t => t.Type == "NickName").Value.ToString();
+                    var email = httpContext.HttpContext.User.Claims.FirstOrDefault(t => t.Type == "NickName");
+                    if (email != null)
+                    {
+                        Email = email.Value.ToString();
+                    }
                     IsAdmin = Convert.ToBoolean(httpContext.HttpContext.User.Claims.First(t => t.Type == "IsAdmin").Value.ToString());
                 }
                 ServerUrl = $"{httpContext.HttpContext.Request.Scheme}://{httpContext.HttpContext.Request.Host}";

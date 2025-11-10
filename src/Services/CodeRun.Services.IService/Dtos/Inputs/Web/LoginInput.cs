@@ -1,5 +1,8 @@
 ﻿namespace CodeRun.Services.IService.Dtos.Inputs.Web
 {
+    /// <summary>
+    /// 登录输入参数
+    /// </summary>
     public class LoginInput
     {
         /// <summary>
@@ -15,11 +18,11 @@
         /// <summary>
         /// 验证码key
         /// </summary>
-        public string? CodeKey { get; set; } = null!;
+        public string CodeKey { get; set; } = null!;
 
         /// <summary>
         /// 验证码
         /// </summary>
-        public string? Code { get; set; } = null!;
+        public string Code { get; set; } = null!;
     }
 }
