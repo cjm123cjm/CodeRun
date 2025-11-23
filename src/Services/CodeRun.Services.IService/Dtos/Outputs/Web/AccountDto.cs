@@ -15,10 +15,6 @@
         /// </summary>
         public string UserName { get; set; } = null!;
         /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; } = null!;
-        /// <summary>
         /// 职位
         /// </summary>
         public string? Position { get; set; }

@@ -113,7 +113,10 @@ const login = () => {
       dataType: 'json',
     })
 
-    if (!result) return
+    if (!result) {
+      changeCheckCode()
+      return
+    }
 
     if (params.rememberMe) {
       let loginInfo = {
@@ -127,7 +130,7 @@ const login = () => {
     }
 
     //保存用户信息
-    proxy.VueCookies.set('token', result.result.token)
+    proxy.VueCookies.set('token', result.result.token, '7d')
     sessionStorage.setItem('userInfo', JSON.stringify(result.result))
 
     //跳转页面

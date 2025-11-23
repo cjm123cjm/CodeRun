@@ -204,12 +204,12 @@ namespace CodeRun.Services.Service.Implements.Web
                 throw new BusinessException("数据不存在");
             }
 
-            if (account.Password != MD5Util.MD5Encrypt(input.OldPassword))
+            if (account.Password != input.OldPassword)
             {
                 throw new BusinessException("旧密码不正确");
             }
 
-            account.Password = MD5Util.MD5Encrypt(input.NewPassword);
+            account.Password = input.NewPassword;
 
             await _unitOfWork.SaveChangesAsync();
         }

@@ -36,6 +36,25 @@ namespace CodeRun.Services.AdminApi.Extensions
                         ValidAudience = jwtTokenOption.Audience,
                         ValidateAudience = true
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                            Console.WriteLine($"Received Token: {!string.IsNullOrEmpty(token)}");
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                Console.WriteLine($"Token length: {token.Length}");
+                            }
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             builder.Services.AddAuthorization();
         }

@@ -51,7 +51,7 @@ namespace CodeRun.Services.Domain.Repository.Web
         /// <returns></returns>
         public async Task<Entity?> GetByIdAsync(long id)
         {
-            return await _dbSet.FindAsync(new[] { id });
+            return await _dbSet.FindAsync(id);
         }
 
         /// <summary>
