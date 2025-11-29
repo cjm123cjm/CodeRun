@@ -19,6 +19,11 @@ const router = createRouter({
           name: '首页',
           component: () => import('@/views/home/Home.vue'),
         },
+        {
+          path: '/setting/menu',
+          name: '菜单管理',
+          component: () => import('@/views/setting/MenuList.vue'),
+        },
       ],
     },
   ],

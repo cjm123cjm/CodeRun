@@ -1,11 +1,11 @@
 ﻿using CodeRun.Services.Domain.CustomerException;
 using CodeRun.Services.Domain.IRepository.Web;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace CodeRun.Services.Domain.Repository.Web
@@ -47,7 +47,7 @@ namespace CodeRun.Services.Domain.Repository.Web
         /// </summary>
         private IDbConnection CreateIndependentConnection()
         {
-            return new SqlConnection(_connectionString);
+            return new MySqlConnection(_connectionString);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace CodeRun.Services.Domain.Repository.Web
 
                 return result;
             }
-            catch (SqlException sqlEx)
+            catch (MySqlException sqlEx)
             {
                 _logger.LogError(sqlEx, "数据库操作失败 (SQL错误: {ErrorNumber})", sqlEx.Number);
                 throw new DapperRepositoryException($"数据库操作失败: {sqlEx.Message}", sqlEx);
@@ -163,31 +163,37 @@ namespace CodeRun.Services.Domain.Repository.Web
         {
             ThrowIfDisposed();
 
-            using var connection = CreateIndependentConnection();
-            connection.Open();
-
-            try
+            using (var connection = CreateIndependentConnection())
             {
-                var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                var result = await operation(connection);
-                stopwatch.Stop();
+                // 连接验证
+                if (connection == null)
+                    throw new InvalidOperationException("无法创建数据库连接");
 
-                if (_options.EnableDetailedLogging)
+                connection.Open();
+
+                try
                 {
-                    _logger.LogDebug("独立连接操作完成，耗时: {ElapsedMs}ms", stopwatch.ElapsedMilliseconds);
-                }
+                    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    var result = await operation(connection);
+                    stopwatch.Stop();
 
-                return result;
-            }
-            catch (SqlException sqlEx)
-            {
-                _logger.LogError(sqlEx, "数据库操作失败 (SQL错误: {ErrorNumber})", sqlEx.Number);
-                throw new DapperRepositoryException($"数据库操作失败: {sqlEx.Message}", sqlEx);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "独立连接操作失败");
-                throw new DapperRepositoryException("数据访问操作失败", ex);
+                    if (_options.EnableDetailedLogging)
+                    {
+                        _logger.LogDebug("独立连接操作完成，耗时: {ElapsedMs}ms", stopwatch.ElapsedMilliseconds);
+                    }
+
+                    return result;
+                }
+                catch (MySqlException sqlEx)
+                {
+                    _logger.LogError(sqlEx, "数据库操作失败 (SQL错误: {ErrorNumber})", sqlEx.Number);
+                    throw new DapperRepositoryException($"数据库操作失败: {sqlEx.Message}", sqlEx);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "独立连接操作失败");
+                    throw new DapperRepositoryException("数据访问操作失败", ex);
+                }
             }
         }
 

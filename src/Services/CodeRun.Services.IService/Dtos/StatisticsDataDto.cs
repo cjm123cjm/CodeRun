@@ -8,7 +8,7 @@
         /// <summary>
         /// app下载...
         /// </summary>
-        public string StatisticsName { get; set; }
+        public string? StatisticsName { get; set; }
         /// <summary>
         /// 总数
         /// </summary>
@@ -17,6 +17,10 @@
         /// 昨日新增
         /// </summary>
         public int PerCount { get; set; }
-        public List<int> ListData { get; set; }
+
+        /// <summary>
+        /// 数据集合
+        /// </summary>
+        public List<int> ListData { get; set; }=new List<int>();
     }
 }

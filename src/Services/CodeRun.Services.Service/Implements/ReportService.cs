@@ -23,46 +23,48 @@ namespace CodeRun.Services.Service.Implements
             DateTime last = now.AddDays(-1);
 
             const string sql = @"
-                                -- App下载
-                                SELECT COUNT(*) FROM AppDevices; 
-                                SELECT COUNT(*) FROM AppDevices WHERE CreatedTime >= @start AND CreatedTime <= @end;
-        
-                                -- 注册用户
-                                SELECT COUNT(*) FROM AppUserInfos; 
-                                SELECT COUNT(*) FROM AppUserInfos WHERE JoinTime >= @start AND JoinTime <= @end;
-        
-                                -- 八股文
-                                SELECT COUNT(*) FROM QuestionInfos; 
-                                SELECT COUNT(*) FROM QuestionInfos WHERE CreatedTime >= @start AND CreatedTime <= @end;
-        
-                                -- 考题
-                                SELECT COUNT(*) FROM ExamQuestions; 
-                                SELECT COUNT(*) FROM ExamQuestions WHERE CreatedTime >= @start AND CreatedTime <= @end;
-        
-                                -- 分享
-                                SELECT COUNT(*) FROM ShareInfos; 
-                                SELECT COUNT(*) FROM ShareInfos WHERE CreatedTime >= @start AND CreatedTime <= @end;
-        
-                                -- 反馈
-                                SELECT COUNT(*) FROM AppFeedbacks; 
-                                SELECT COUNT(*) FROM AppFeedbacks WHERE CreatedTime >= @start AND CreatedTime <= @end;";
+        SELECT 
+            'App下载' as StatisticsName,
+            (SELECT COUNT(*) FROM AppDevices) as Count,
+            (SELECT COUNT(*) FROM AppDevices WHERE CreatedTime >= @start AND CreatedTime <= @end) as PerCount
+        UNION ALL
+        SELECT 
+            '注册用户' as StatisticsName,
+            (SELECT COUNT(*) FROM AppUserInfos) as Count,
+            (SELECT COUNT(*) FROM AppUserInfos WHERE JoinTime >= @start AND JoinTime <= @end) as PerCount
+        UNION ALL
+        SELECT 
+            '八股文' as StatisticsName,
+            (SELECT COUNT(*) FROM QuestionInfos) as Count,
+            (SELECT COUNT(*) FROM QuestionInfos WHERE CreatedTime >= @start AND CreatedTime <= @end) as PerCount
+        UNION ALL
+        SELECT 
+            '考题' as StatisticsName,
+            (SELECT COUNT(*) FROM ExamQuestions) as Count,
+            (SELECT COUNT(*) FROM ExamQuestions WHERE CreatedTime >= @start AND CreatedTime <= @end) as PerCount
+        UNION ALL
+        SELECT 
+            '分享' as StatisticsName,
+            (SELECT COUNT(*) FROM ShareInfos) as Count,
+            (SELECT COUNT(*) FROM ShareInfos WHERE CreatedTime >= @start AND CreatedTime <= @end) as PerCount
+        UNION ALL
+        SELECT 
+            '反馈' as StatisticsName,
+            (SELECT COUNT(*) FROM AppFeedbacks) as Count,
+            (SELECT COUNT(*) FROM AppFeedbacks WHERE CreatedTime >= @start AND CreatedTime <= @end) as PerCount";
 
-            using var multi = await _dapperRepository.QueryMultipleAsync(sql, new { start = last, end = now });
-
-            var titles = new[] { "App下载", "注册用户", "八股文", "考题", "分享", "反馈" };
-            var results = new List<StatisticsDataDto>();
-
-            for (int i = 0; i < titles.Length; i++)
+            try
             {
-                results.Add(new StatisticsDataDto
-                {
-                    StatisticsName = titles[i],
-                    Count = await multi.ReadFirstOrDefaultAsync<int>(),
-                    PerCount = await multi.ReadFirstOrDefaultAsync<int>()
-                });
-            }
+                var results = await _dapperRepository.QueryAsync<StatisticsDataDto>(sql,
+                    new { start = last, end = now });
 
-            return results;
+                return results.ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -92,13 +94,16 @@ namespace CodeRun.Services.Service.Implements
                 DateTime start = DateTime.Parse(item);
                 DateTime end = start.AddDays(1);
 
-                string sql = $"SELECT COUNT(*) FROM AppDevices WHERE CreatedTime >= @start AND CreatedTime <= @end;" +
-                    $"SELECT COUNT(*) FROM AppUserInfos WHERE JoinTime >= @start AND JoinTime <= @end;";
+                string sql = @"
+                    SELECT 
+                        (SELECT COUNT(*) FROM AppDevices WHERE CreatedTime >= @start AND CreatedTime <= @end) as DownloadCount,
+                        (SELECT COUNT(*) FROM AppUserInfos WHERE JoinTime >= @start AND JoinTime <= @end) as RegisterCount";
 
-                using var multi = await _dapperRepository.QueryMultipleAsync(sql, new { start = start, end = end });
+                var result = await _dapperRepository.QueryFirstOrDefaultAsync<(int DownloadCount, int RegisterCount)>(sql,
+                    new { start, end });
 
-                download.ListData.Add(await multi.ReadFirstOrDefaultAsync<int>());
-                register.ListData.Add(await multi.ReadFirstOrDefaultAsync<int>());
+                download.ListData.Add(result.DownloadCount);
+                register.ListData.Add(result.RegisterCount);
             }
 
             statistics.ItemDataList.Add(download);
