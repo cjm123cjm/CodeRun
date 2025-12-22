@@ -4,6 +4,8 @@ const regs = {
   password: /^(?=.*\d)(?=.*[a-zA-Z])[\da-zA-Z~@#$%^&*_]{8,}$/,
   shareCode: /^[A-Za-z0-9]+$/,
   version: /^[0-9\.]+$/,
+  phone:
+    /^[1](([3][0-9])|([4][0,1,4-9])|([5][0-3,5-9])|([6][2,5,6,7])|([7][0-8])|([8][0-9])|([9][0-3,5-9]))[0-9]{8}$/,
 }
 
 const verify = (rule, value, reg, callback) => {
@@ -30,5 +32,8 @@ export default {
   },
   shareCode: (rule, value, callback) => {
     return verify(rule, value, regs.shareCode, callback)
+  },
+  phone: (rule, value, callback) => {
+    return verify(rule, value, regs.phone, callback)
   },
 }

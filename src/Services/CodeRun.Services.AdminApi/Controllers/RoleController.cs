@@ -57,7 +57,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.settings_role_list)]
-        public async Task<ResponseDto> LoadRoleList(RoleQueryInput queryInput)
+        public async Task<ResponseDto> LoadRoleList([FromQuery]RoleQueryInput queryInput)
         {
             var data = await _roleService.LoadRoleListAsync(queryInput);
 
@@ -71,7 +71,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.settings_role_list)]
-        public async Task<ResponseDto> RoleMenuByRoleId(long roleId)
+        public async Task<ResponseDto> RoleMenuByRoleId([FromQuery]long roleId)
         {
             var data = await _roleService.RoleMenuByRoleIdAsync(roleId);
 
@@ -85,7 +85,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.settings_role_del)]
-        public async Task<ResponseDto> DeletedRole(long roleId)
+        public async Task<ResponseDto> DeletedRole([FromBody]long roleId)
         {
             await _roleService.DeletedRoleAsync(roleId);
 

@@ -14,7 +14,7 @@
         /// </summary>
         public long MenuId { get; set; }
         /// <summary>
-        /// 0-半选,1-全选
+        /// 0-半选,1-全选【按钮是1，菜单是0】
         /// </summary>
         public short CheckType { get; set; }
     }

@@ -54,6 +54,8 @@ instance.interceptors.response.use(
       } else {
         return responseData
       }
+    } else if (responseData.code == 403) {
+      return Promise.reject({ showError: showError, msg: responseData.message })
     } else if (responseData.code == 401) {
       setTimeout(() => {
         router.push('/login')
@@ -69,6 +71,12 @@ instance.interceptors.response.use(
   (error) => {
     if (error.config.showLoading && loading) {
       loading.close()
+    }
+    if (error.status == 401) {
+      router.push('/login')
+      return
+    } else if (error.status == 403) {
+      return Promise.reject({ showError: showError, msg: error.response.data.message })
     }
     return Promise.reject({ showError: true, msg: '网络异常!' })
   },

@@ -26,7 +26,7 @@ namespace CodeRun.Services.Service.Implements.Web
         /// <returns></returns>
         public async Task<List<MenuTreeDto>> LoadMenuTreeAsync()
         {
-            var menus = await _menuRepository.QueryWhere(null).ToListAsync();
+            var menus = await _menuRepository.QueryWhere(null).OrderBy(t => t.Sort).ToListAsync();
 
             menus.Add(new Menu
             {
@@ -54,10 +54,6 @@ namespace CodeRun.Services.Service.Implements.Web
             if (input.MenuId == 0)
             {
                 int permissCodeCount = await _menuRepository.QueryWhere(t => t.PermissionCode == input.PermissionCode).CountAsync();
-                if (permissCodeCount != 0)
-                {
-                    throw new BusinessException(200, input.PermissionCode + "已存在");
-                }
 
                 var menu = ObjectMapper.Map<Menu>(input);
 

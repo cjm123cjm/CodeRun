@@ -52,8 +52,8 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="menuId">菜单id</param>
         /// <returns></returns>
         [HttpPost]
-        [PermissionAuthorize(PermissionCodeEnum.settings_menu_del)]
-        public async Task<ResponseDto> DeletedMenu(long menuId)
+        [PermissionAuthorize(PermissionCodeEnum.settings_menu_edit)]
+        public async Task<ResponseDto> DeletedMenu([FromBody] long menuId)
         {
             await _menuService.DeletedMenuAsync(menuId);
             return new ResponseDto();

@@ -11,12 +11,14 @@ import 'element-plus/dist/index.css'
 import '@/assets/icon/iconfont.css'
 //dialog组件
 import Dialog from '@/components/Dialog.vue'
+import Table from '@/components/Table.vue'
 
 import Request from '@/utils/Request.js'
 import Message from '@/utils/Message.js'
 import VueCookies from 'vue-cookies'
 import Confirm from '@/utils/Confirm'
-import Verify from './utils/Verify'
+import Verify from '@/utils/Verify'
+import PermissionCodes from '@/utils/PermissionCode'
 
 const app = createApp(App)
 
@@ -24,11 +26,24 @@ app.use(router)
 app.use(ElementPlus)
 
 app.component('Dialog', Dialog)
+app.component('Table', Table)
 
 app.config.globalProperties.Request = Request
 app.config.globalProperties.Message = Message
 app.config.globalProperties.VueCookies = VueCookies
 app.config.globalProperties.Confirm = Confirm
 app.config.globalProperties.Verify = Verify
+app.config.globalProperties.PermissionCodes = PermissionCodes
 
+//自定义指令,权限
+app.directive('has', {
+  mounted: (el, binding, vnode) => {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    let permissionCodes = userInfo.permissionCodes
+    permissionCodes = !permissionCodes ? [] : permissionCodes
+    if (!permissionCodes.includes(binding.value)) {
+      el.parentNode.removeChild(el)
+    }
+  },
+})
 app.mount('#app')

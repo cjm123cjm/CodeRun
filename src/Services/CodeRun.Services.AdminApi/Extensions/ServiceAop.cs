@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using CodeRun.Services.Common;
+using CodeRun.Services.Domain.CustomerException;
 using Newtonsoft.Json;
 using System.Reflection;
 
@@ -164,6 +165,10 @@ namespace CodeRun.Services.AdminApi.Extensions
             {
                 await actualReturnValue;
                 await postAction();
+            }
+            catch (BusinessException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {

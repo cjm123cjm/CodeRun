@@ -158,6 +158,8 @@ namespace CodeRun.Services.Service.Implements.Web
             var account = ObjectMapper.Map<Account>(input);
             account.CreatedTime = DateTime.Now;
             account.UserId = SnowIdWorker.NextId();
+            account.Status = 1;
+            account.Password=MD5Util.MD5Encrypt(input.Password);
 
             await _accountRepository.AddAsync(account);
 
@@ -204,7 +206,7 @@ namespace CodeRun.Services.Service.Implements.Web
                 throw new BusinessException("数据不存在");
             }
 
-            if (account.Password != input.OldPassword)
+            if (account.Password.ToLower() != input.OldPassword.ToLower())
             {
                 throw new BusinessException("旧密码不正确");
             }

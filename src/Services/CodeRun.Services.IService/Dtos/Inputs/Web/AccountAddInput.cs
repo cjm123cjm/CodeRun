@@ -23,16 +23,8 @@
         /// </summary>
         public string? Position { get; set; }
         /// <summary>
-        /// 状态 0-禁用 1-启用
-        /// </summary>
-        public short Status { get; set; }
-        /// <summary>
         /// 角色(多个角色用,号分割)
         /// </summary>
         public string? Roles { get; set; }
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreatedTime { get; set; }
     }
 }

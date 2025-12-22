@@ -83,7 +83,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.settings_account_list)]
-        public async Task<ResponseDto> LoadAccountList(AccountQueryInput queryInput)
+        public async Task<ResponseDto> LoadAccountList([FromQuery]AccountQueryInput queryInput)
         {
             var data = await _accountService.LoadAccountListAsync(queryInput);
 
@@ -153,7 +153,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.settings_account_del)]
-        public async Task<ResponseDto> DeleteAccountAsync(long accountId)
+        public async Task<ResponseDto> DeleteAccount([FromBody]long accountId)
         {
             await _accountService.DeleteAccountAsync(accountId);
 

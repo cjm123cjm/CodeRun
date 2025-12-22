@@ -24,6 +24,16 @@ const router = createRouter({
           name: '菜单管理',
           component: () => import('@/views/setting/MenuList.vue'),
         },
+        {
+          path: '/setting/role',
+          name: '角色管理',
+          component: () => import('@/views/setting/RoleList.vue'),
+        },
+        {
+          path: '/setting/user',
+          name: '用户管理',
+          component: () => import('@/views/setting/UserList.vue'),
+        },
       ],
     },
   ],

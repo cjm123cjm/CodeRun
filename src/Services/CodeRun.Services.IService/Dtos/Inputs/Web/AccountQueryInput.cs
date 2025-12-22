@@ -5,11 +5,11 @@
         /// <summary>
         /// 用户名
         /// </summary>
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
         /// 手机号
         /// </summary>
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
     }
 }

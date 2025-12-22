@@ -19,12 +19,12 @@
         public string? RoleDesc { get; set; }
 
         /// <summary>
-        /// 菜单ids
+        /// 按钮ids
         /// </summary>
-        public string MenuIds { get; set; }
+        public string? MenuIds { get; set; }
         /// <summary>
-        /// 全选还是半选
+        /// 半选Ids
         /// </summary>
-        public string HalfMenuIds { get; set; }
+        public string? HalfMenuIds { get; set; }
     }
 }

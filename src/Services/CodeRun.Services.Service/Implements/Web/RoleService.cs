@@ -70,9 +70,10 @@ namespace CodeRun.Services.Service.Implements.Web
                 //保存数据
                 var role = ObjectMapper.Map<Role>(input);
                 role.RoleId = SnowIdWorker.NextId();
+                role.LastUpdatedTime = DateTime.Now;
 
                 //保存菜单
-                await SaveRoleMenu(input.RoleId, input.MenuIds, input.HalfMenuIds);
+                await SaveRoleMenu(role.RoleId, input.MenuIds, input.HalfMenuIds);
 
                 await _roleRepository.AddAsync(role);
             }
@@ -105,8 +106,8 @@ namespace CodeRun.Services.Service.Implements.Web
                 _roleForMenuRepository.Delete(oldMenuIds.ToArray());
             }
 
-            var menuIdSplit = menuIds.Split(",").Select(t => Convert.ToInt64(t)).ToList();
-            var halfMenuIdSplit = string.IsNullOrWhiteSpace(halfMenuIds) ? new List<long>() : halfMenuIds.Split(",").Select(t => Convert.ToInt64(t)).ToList();
+            var menuIdSplit = menuIds.Split(",").Select(t => Convert.ToInt64(t)).Where(t => t > 0).ToList();
+            var halfMenuIdSplit = string.IsNullOrWhiteSpace(halfMenuIds) ? new List<long>() : halfMenuIds.Split(",").Select(t => Convert.ToInt64(t)).Where(t => t > 0).ToList();
 
             List<RoleForMenu> saveMenu = new List<RoleForMenu>();
             foreach (var item in menuIdSplit)
