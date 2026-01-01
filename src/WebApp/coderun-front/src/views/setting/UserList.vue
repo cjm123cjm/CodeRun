@@ -57,7 +57,10 @@
         {{ dayjs(row.createdTime).format('YYYY-MM-DD HH:mm:ss') }}
       </template>
       <template #operation="{ index, row }">
-        <div class="row-op-panel">
+        <div
+          class="row-op-panel"
+          v-if="!(userInfo.account.isAdmin && row.userId == userInfo.account.userId)"
+        >
           <a
             class="a-link"
             href="javascript:void(0)"
@@ -101,6 +104,9 @@ import UserPasswordEdit from './UserPasswordEdit.vue'
 import { ref, getCurrentInstance } from 'vue'
 import dayjs from 'dayjs'
 const { proxy } = getCurrentInstance()
+
+const userInfo = ref(JSON.parse(sessionStorage.getItem('userInfo')))
+
 const api = {
   LoadAccountList: '/Account/LoadAccountList',
   UpdateAccountStatus: '/Account/UpdateAccountStatus',

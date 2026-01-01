@@ -12,6 +12,8 @@ import '@/assets/icon/iconfont.css'
 //dialog组件
 import Dialog from '@/components/Dialog.vue'
 import Table from '@/components/Table.vue'
+import Cover from '@/components/Cover.vue'
+import CoverUpload from '@/components/CoverUpload.vue'
 
 import Request from '@/utils/Request.js'
 import Message from '@/utils/Message.js'
@@ -27,6 +29,8 @@ app.use(ElementPlus)
 
 app.component('Dialog', Dialog)
 app.component('Table', Table)
+app.component('Cover', Cover)
+app.component('CoverUpload', CoverUpload)
 
 app.config.globalProperties.Request = Request
 app.config.globalProperties.Message = Message
@@ -34,6 +38,10 @@ app.config.globalProperties.VueCookies = VueCookies
 app.config.globalProperties.Confirm = Confirm
 app.config.globalProperties.Verify = Verify
 app.config.globalProperties.PermissionCodes = PermissionCodes
+app.config.globalProperties.globalInfo = {
+  avatarUrl: '/api/file/getAvatar',
+  imageUrl: '/userUploadFile/',
+}
 
 //自定义指令,权限
 app.directive('has', {

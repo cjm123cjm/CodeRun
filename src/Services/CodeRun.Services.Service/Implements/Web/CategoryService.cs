@@ -121,8 +121,13 @@ namespace CodeRun.Services.Service.Implements.Web
 
             var categories = await _categoryRepository.QueryWhere(t => ids.Contains(t.CategoryId), true).ToListAsync();
 
+            // 按照ids中的顺序排序
+            var sortedCategories = categories
+                .OrderBy(c => ids.IndexOf(c.CategoryId))
+                .ToList();
+
             int index = 1;
-            foreach (var item in categories)
+            foreach (var item in sortedCategories)
             {
                 item.Sort = index;
 

@@ -21,6 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         logProvider: () => console,
       },
+      '/userUploadFile': {
+        target: 'http://localhost:9090',
+        changeOrigin: true,
+        logProvider: () => console,
+      },
     },
   },
 })

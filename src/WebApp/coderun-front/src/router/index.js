@@ -34,6 +34,11 @@ const router = createRouter({
           name: '用户管理',
           component: () => import('@/views/setting/UserList.vue'),
         },
+        {
+          path: '/content/category',
+          name: '分类管理',
+          component: () => import('@/views/content/CategoryList.vue'),
+        },
       ],
     },
   ],

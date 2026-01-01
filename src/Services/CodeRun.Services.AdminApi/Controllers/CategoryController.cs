@@ -52,7 +52,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.category_del)]
-        public async Task<ResponseDto> DeleteCategory(long categoryId)
+        public async Task<ResponseDto> DeleteCategory([FromBody]long categoryId)
         {
             await _categoryService.DeleteCategoryAsync(categoryId);
 
@@ -67,7 +67,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.category_edit)]
-        public async Task<ResponseDto> ChangeCategorySort(string categoriesId)
+        public async Task<ResponseDto> ChangeCategorySort([FromBody]string categoriesId)
         {
             await _categoryService.ChangeCategorySortAsync(categoriesId);
 
