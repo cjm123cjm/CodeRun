@@ -14,6 +14,10 @@ import Dialog from '@/components/Dialog.vue'
 import Table from '@/components/Table.vue'
 import Cover from '@/components/Cover.vue'
 import CoverUpload from '@/components/CoverUpload.vue'
+import SunEditor from '@/components/SunEditor.vue'
+import ImportData from '@/components/content/ImportData.vue'
+import Window from '@/components/Window.vue'
+import ShowDetail from '@/components/content/ShowDetail.vue'
 
 import Request from '@/utils/Request.js'
 import Message from '@/utils/Message.js'
@@ -31,6 +35,10 @@ app.component('Dialog', Dialog)
 app.component('Table', Table)
 app.component('Cover', Cover)
 app.component('CoverUpload', CoverUpload)
+app.component('SunEditor', SunEditor)
+app.component('ImportData', ImportData)
+app.component('Window', Window)
+app.component('ShowDetail', ShowDetail)
 
 app.config.globalProperties.Request = Request
 app.config.globalProperties.Message = Message

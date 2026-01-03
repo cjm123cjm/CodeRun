@@ -146,12 +146,10 @@ namespace CodeRun.Services.AdminApi.Controllers
         {
             string filePath = Path.Combine(
                          _folderPath.Value.PhysicalPath,
-                         "/template/考题模板.xslx".TrimStart('/').Replace('/', '\\')
+                         "template/考题模板.xslx".Replace('/', '\\')
                      );
 
-            string suffix = ".xslx";
-
-            await ReadFile(filePath, suffix);
+            await ReadFile(filePath);
         }
 
         /// <summary>

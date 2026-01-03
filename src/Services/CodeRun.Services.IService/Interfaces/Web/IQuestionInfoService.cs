@@ -47,7 +47,7 @@ namespace CodeRun.Services.IService.Interfaces.Web
         /// </summary>
         /// <param name="importDtos"></param>
         /// <returns></returns>
-        Task BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos);
+        Task<List<ImportDataErrorDto>> BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos);
 
         /// <summary>
         /// 上一页/下一页查看

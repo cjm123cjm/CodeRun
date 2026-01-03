@@ -23,6 +23,15 @@ namespace CodeRun.Services.AdminApi.CustomerPolicy
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
+            // 检查权限要求列表是否包含 "No_Permission"
+            // 如果包含，则直接授权通过，不进行任何验证
+            if (requirement.PermissionCodes.Any(p =>
+                p.ToString().Equals("No_Permission", StringComparison.OrdinalIgnoreCase)))
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             // 检查用户是否认证
             if (!context.User.Identity.IsAuthenticated)
             {

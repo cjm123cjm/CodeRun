@@ -112,7 +112,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <exception cref="NotImplementedException"></exception>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.share_list)]
-        public async Task<ResponseDto> ShowShareInfoDetailNextAsync(ShareInfoQueryInput input)
+        public async Task<ResponseDto> ShowShareInfoDetailNext(ShareInfoQueryInput input)
         {
             var data = await _shareInfoService.ShowShareInfoDetailNextAsync(input);
 

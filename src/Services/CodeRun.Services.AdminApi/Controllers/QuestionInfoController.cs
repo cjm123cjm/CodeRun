@@ -43,7 +43,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.question_list)]
-        public async Task<ResponseDto> LoadQuestionInfoList(QuestionInfoQueryInput queryInput)
+        public async Task<ResponseDto> LoadQuestionInfoList([FromQuery] QuestionInfoQueryInput queryInput)
         {
             var data = await _questionInfoService.LoadQuestionInfoListAsync(queryInput);
 
@@ -57,7 +57,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_edit)]
-        public async Task<ResponseDto> QuestionInfoAddOrUpdate(QuestionInfoAddOrUpdateInput input)
+        public async Task<ResponseDto> QuestionInfoAddOrUpdate([FromBody] QuestionInfoAddOrUpdateInput input)
         {
             await _questionInfoService.QuestionInfoAddOrUpdateAsync(input);
 
@@ -85,7 +85,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_del)]
-        public async Task<ResponseDto> DeleteQuestionInfo(long questionInfoId)
+        public async Task<ResponseDto> DeleteQuestionInfo([FromBody] long questionInfoId)
         {
             await _questionInfoService.DeleteQuestionInfoAsync(questionInfoId.ToString());
 
@@ -99,7 +99,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_del_batch)]
-        public async Task<ResponseDto> DeleteBatchQuestionInfo(string questionInfoIds)
+        public async Task<ResponseDto> DeleteBatchQuestionInfo([FromBody] string questionInfoIds)
         {
             await _questionInfoService.DeleteQuestionInfoAsync(questionInfoIds);
 
@@ -113,7 +113,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_post)]
-        public async Task<ResponseDto> PostQuestionInfo(string questionInfoIds)
+        public async Task<ResponseDto> PostQuestionInfo([FromBody] string questionInfoIds)
         {
             await _questionInfoService.UpdateStatusQuestionInfoAsync(questionInfoIds, 1);
 
@@ -127,7 +127,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_post)]
-        public async Task<ResponseDto> CancelQuestionInfo(string questionInfoIds)
+        public async Task<ResponseDto> CancelQuestionInfo([FromBody] string questionInfoIds)
         {
             await _questionInfoService.UpdateStatusQuestionInfoAsync(questionInfoIds, 0);
 
@@ -138,18 +138,18 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// 下载模板(文件地址/template/问题模板.xlsx)
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.No_Permission)]
         public async Task DownloadTemplate()
         {
             string filePath = Path.Combine(
                          _folderPath.Value.PhysicalPath,
-                         "/template/问题模板.xslx".TrimStart('/').Replace('/', '\\')
+                         "template/问题模板.xlsx".Replace('/', '\\')
                      );
 
-            string suffix = ".xslx";
+            string suffix = "xlsx";
 
-            await ReadFile(filePath, suffix);
+            await ReadFile(filePath);
         }
 
 
@@ -159,7 +159,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.question_import)]
-        public async Task<ResponseDto> ImportQuestionInfo(IFormFile formFile)
+        public async Task<ResponseDto> ImportQuestionInfo([FromForm] IFormFile formFile)
         {
             if (formFile == null || formFile.Length == 0)
             {
@@ -168,7 +168,7 @@ namespace CodeRun.Services.AdminApi.Controllers
 
             // 创建临时文件路径
             var tempFileName = $"{Guid.NewGuid()}_{formFile.FileName}";
-            var tempFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "temp", tempFileName);
+            var tempFilePath = Path.Combine(_folderPath.Value.PhysicalPath, "temp", tempFileName);
 
             try
             {
@@ -188,6 +188,7 @@ namespace CodeRun.Services.AdminApi.Controllers
                 // 读取并处理Excel文件
                 using (var stream = System.IO.File.OpenRead(tempFilePath))
                 {
+
                     var importList = await _excelImportManager.ImportAsync<QuestionInfoImportDto>(stream, opt =>
                     {
                         opt.SheetIndex = 0;
@@ -198,10 +199,10 @@ namespace CodeRun.Services.AdminApi.Controllers
                     var list = importList.GetAllData().ToList();
 
                     // 插入数据到数据库
-                    await _questionInfoService.BatchImportQuestionInfoAsync(list);
-                }
+                    var result = await _questionInfoService.BatchImportQuestionInfoAsync(list);
 
-                return new ResponseDto();
+                    return new ResponseDto(result);
+                }
             }
             catch (Exception ex)
             {
@@ -233,7 +234,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.question_list)]
-        public async Task<ResponseDto> ShowQuestionInfoDetailNext(QuestionInfoQueryInput queryInput)
+        public async Task<ResponseDto> ShowQuestionInfoDetailNext([FromQuery] QuestionInfoQueryInput queryInput)
         {
             queryInput.ReadCountAdd = false;
 

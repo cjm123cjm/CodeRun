@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
 using CodeRun.Services.IService.Options;
+using Rong.EasyExcel;
+using Rong.EasyExcel.Npoi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,6 +107,9 @@ builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHand
 //配置上传文件位置
 var folderPathOption = builder.Configuration.GetSection("FolderPath");
 builder.Services.Configure<FolderPath>(folderPathOption);
+
+//导入文件
+builder.Services.AddNpoiExcel();
 
 var app = builder.Build();
 

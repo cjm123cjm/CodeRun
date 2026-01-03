@@ -24,7 +24,7 @@
         public string? CreatedUserName { get; set; }
 
         /// <summary>
-        /// 1-上一页/2-下一页
+        /// 0-当前页/1-上一页/2-下一页
         /// </summary>
         public int NextType { get; set; }
         /// <summary>

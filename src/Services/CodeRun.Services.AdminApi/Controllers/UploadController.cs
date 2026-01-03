@@ -25,14 +25,14 @@ namespace CodeRun.Services.AdminApi.Controllers
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 609715200)]
         [RequestSizeLimit(609715200)]
-        public async Task<ResponseDto> UploadFile(IFormFile formFile)
+        public async Task<ResponseDto> UploadFile([FromForm] IFormFile formFile)
         {
             // 获取文件后缀名
             var extension = Path.GetExtension(formFile.FileName);
             string month = DateTime.Now.ToString("yyyyMM");
             var uploadFolder = Path.Combine(_folderPath.Value.PhysicalPath, month);
             //202510/
-            if (Directory.Exists(uploadFolder))
+            if (!Directory.Exists(uploadFolder))
             {
                 Directory.CreateDirectory(uploadFolder);
             }

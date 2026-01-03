@@ -37,7 +37,7 @@ namespace CodeRun.Services.Service.Implements.Web
         {
             IQueryable<QuestionInfo> query = SearchQuery(queryInput);
 
-            var questionDtos = await query.OrderByDescending(t => t.CreatedTime).ProjectTo<QuestionInfoDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
+            var questionDtos = await query.ProjectTo<QuestionInfoDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
 
             return questionDtos;
         }
@@ -54,7 +54,6 @@ namespace CodeRun.Services.Service.Implements.Web
             var totalCount = await query.CountAsync();
 
             var questionDtos = await query
-                                    .OrderByDescending(t => t.CreatedTime)
                                     .Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
                                     .Take(queryInput.PageSize)
                                     .ProjectTo<QuestionInfoDto>(ObjectMapper.ConfigurationProvider).ToListAsync();
@@ -182,32 +181,38 @@ namespace CodeRun.Services.Service.Implements.Web
         /// </summary>
         /// <param name="importDtos"></param>
         /// <returns></returns>
-        public async Task BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos)
+        public async Task<List<ImportDataErrorDto>> BatchImportQuestionInfoAsync(List<QuestionInfoImportDto> importDtos)
         {
             var categoryNames = importDtos.Select(t => t.CategoryName).Distinct().ToList();
 
             var categories = await _categoryRepository.QueryWhere(t => categoryNames.Contains(t.CategoryName), false).ToListAsync();
 
-            Dictionary<int, List<string>> errorStr = new Dictionary<int, List<string>>();
+            List<ImportDataErrorDto> importDataErrorDtos = new List<ImportDataErrorDto>();
 
             List<QuestionInfo> saveQuestion = new List<QuestionInfo>();
             int index = 0;
             foreach (var item in importDtos)
             {
                 index++;
+
                 List<string> error = new List<string>();
                 var category = categories.FirstOrDefault(t => t.CategoryName == item.CategoryName);
                 if (category == null)
                 {
-                    error.Add($"第{index}行系统中不存分类名称为{item.CategoryName},请先添加");
+                    error.Add("分类名称不存在");
                 }
                 if (item.DifficultyLevel < 1 || item.DifficultyLevel > 5)
                 {
-                    error.Add($"第{index}行难度只能是1-5的正整数");
+                    error.Add("难度只能是1-5的正整数");
                 }
                 if (error.Count > 0)
                 {
-                    errorStr.Add(index, error);
+                    var errorData = new ImportDataErrorDto
+                    {
+                        RowNum = index,
+                        ErrorItemList = error,
+                    };
+                    importDataErrorDtos.Add(errorData);
                     continue;
                 }
 
@@ -228,14 +233,14 @@ namespace CodeRun.Services.Service.Implements.Web
                 saveQuestion.Add(questionInfo);
             }
 
-            if (errorStr.Count != 0)
+            if (importDataErrorDtos.Count == 0)
             {
-                throw new BusinessException(errorStr.ToString());
+                await _questionInfoRepository.AddAsync(saveQuestion.ToArray());
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            await _questionInfoRepository.AddAsync(saveQuestion.ToArray());
-
-            await _unitOfWork.SaveChangesAsync();
+            return importDataErrorDtos;
         }
 
         /// <summary>
@@ -245,29 +250,34 @@ namespace CodeRun.Services.Service.Implements.Web
         /// <returns></returns>
         public async Task<QuestionInfoAddOrUpdateInput> ShowQuestionInfoDetailNextAsync(QuestionInfoQueryInput queryInput)
         {
-            if (queryInput.NextType == 0 || queryInput.CurrentQuestionInfoId <= 0)
+            if (queryInput.CurrentQuestionInfoId <= 0)
             {
                 throw new BusinessException("参数错误");
             }
             var query = SearchQuery(queryInput);
 
+            QuestionInfo? question = null;
             //上一页
             if (queryInput.NextType == 1)
             {
                 query = query.Where(t => t.QuestionId < queryInput.CurrentQuestionInfoId);
+
+                question = await query.LastOrDefaultAsync();
             }
             //下一页
             else if (queryInput.NextType == 2)
             {
                 query = query.Where(t => t.QuestionId > queryInput.CurrentQuestionInfoId);
+
+                question = await query.FirstOrDefaultAsync();
             }
             //当前页
             else
             {
                 query = query.Where(t => t.QuestionId == queryInput.CurrentQuestionInfoId);
-            }
 
-            var question = await query.OrderByDescending(t => t.CreatedTime).Take(1).FirstOrDefaultAsync();
+                question = await query.FirstOrDefaultAsync();
+            }
 
             if (question == null)
             {
@@ -315,6 +325,8 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 query = query.Where(t => queryInput.QuestionIds.Contains(t.QuestionId));
             }
+
+            query = query.OrderBy(t => t.QuestionId);
 
             return query;
         }
