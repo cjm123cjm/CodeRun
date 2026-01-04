@@ -9,6 +9,7 @@ using CodeRun.Services.Service.Implements;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MySqlX.XDevAPI.Common;
 using Rong.EasyExcel;
 using Rong.EasyExcel.Models;
 
@@ -45,7 +46,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_list)]
-        public async Task<ResponseDto> LoadExamQuestionList(ExamQuestionQueryInput queryInput)
+        public async Task<ResponseDto> LoadExamQuestionList([FromQuery] ExamQuestionQueryInput queryInput)
         {
             var data = await _questionService.LoadExamQuestionListAsync(queryInput);
 
@@ -59,7 +60,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_edit)]
-        public async Task<ResponseDto> SaveExamQuestion(ExamQuestionAddOrUpdateInput input)
+        public async Task<ResponseDto> SaveExamQuestion([FromBody] ExamQuestionAddOrUpdateInput input)
         {
             await _questionService.SaveExamQuestionAsync(input);
 
@@ -71,9 +72,9 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{id}")]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_list)]
-        public async Task<ResponseDto> ExamQuestionByIdAsync(long id)
+        public async Task<ResponseDto> ExamQuestionById(long id)
         {
             var data = await _questionService.ExamQuestionByIdAsync(id);
 
@@ -87,7 +88,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_del)]
-        public async Task<ResponseDto> DeletedExamQuestion(long id)
+        public async Task<ResponseDto> DeletedExamQuestion([FromBody] long id)
         {
             await _questionService.DeletedExamQuestionAsync(id.ToString());
 
@@ -101,7 +102,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_del_batch)]
-        public async Task<ResponseDto> DeletedBatchExamQuestion(string ids)
+        public async Task<ResponseDto> DeletedBatchExamQuestion([FromBody] string ids)
         {
             await _questionService.DeletedExamQuestionAsync(ids);
 
@@ -115,9 +116,9 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_post)]
-        public async Task<ResponseDto> PostExamQuestion(string ids)
+        public async Task<ResponseDto> PostExamQuestion([FromBody] string ids)
         {
-            await _questionService.UpdateStatusExamQuestionAsync(ids,1);
+            await _questionService.UpdateStatusExamQuestionAsync(ids, 1);
 
             return new ResponseDto();
         }
@@ -129,7 +130,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_post)]
-        public async Task<ResponseDto> CancelExamQuestion(string ids)
+        public async Task<ResponseDto> CancelExamQuestion([FromBody] string ids)
         {
             await _questionService.UpdateStatusExamQuestionAsync(ids, 0);
 
@@ -140,7 +141,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// 下载模板(文件地址/template/考题模板.xlsx)
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.No_Permission)]
         public async Task DownloadTemplate()
         {
@@ -158,7 +159,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_import)]
-        public async Task<ResponseDto> ImportQuestionInfo(IFormFile formFile)
+        public async Task<ResponseDto> ImportQuestionInfo([FromForm] IFormFile formFile)
         {
             if (formFile == null || formFile.Length == 0)
             {
@@ -167,7 +168,7 @@ namespace CodeRun.Services.AdminApi.Controllers
 
             // 创建临时文件路径
             var tempFileName = $"{Guid.NewGuid()}_{formFile.FileName}";
-            var tempFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "temp", tempFileName);
+            var tempFilePath = Path.Combine(_folderPath.Value.PhysicalPath, "temp", tempFileName);
 
             try
             {
@@ -197,10 +198,10 @@ namespace CodeRun.Services.AdminApi.Controllers
                     var list = importList.GetAllData().ToList();
 
                     // 插入数据到数据库
-                    await _questionService.BatchImportExamQuestionAsync(list);
-                }
+                    var result = await _questionService.BatchImportExamQuestionAsync(list);
 
-                return new ResponseDto();
+                    return new ResponseDto(result);
+                }
             }
             catch (Exception ex)
             {
@@ -232,7 +233,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.exam_question_list)]
-        public async Task<ResponseDto> ShowExamQuestionDetailNext(ExamQuestionQueryInput queryInput)
+        public async Task<ResponseDto> ShowExamQuestionDetailNext([FromQuery] ExamQuestionQueryInput queryInput)
         {
             var data = await _questionService.ShowExamQuestionDetailNextAsync(queryInput);
 

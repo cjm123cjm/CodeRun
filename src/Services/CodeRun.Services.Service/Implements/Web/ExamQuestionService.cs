@@ -119,6 +119,13 @@ namespace CodeRun.Services.Service.Implements.Web
         /// <returns></returns>
         public async Task SaveExamQuestionAsync(ExamQuestionAddOrUpdateInput input)
         {
+            //查询类型
+            var category = await _categoryRepository.GetByIdAsync(input.CategoryId);
+            if (category == null)
+            {
+                throw new BusinessException("类型不存在");
+            }
+            input.CategoryName = category.CategoryName;
             if (input.QuestionId == 0)
             {
                 var examQuestion = ObjectMapper.Map<ExamQuestion>(input);
@@ -278,25 +285,30 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 throw new BusinessException("参数错误");
             }
-            var query = SearchQuery(queryInput);
+            var query = SearchQuery(queryInput).OrderByDescending(t => t.QuestionId);
 
-            //上一页
-            if (queryInput.Type == 0)
+            ExamQuestion? examQuestion = null;
+            //当前页
+            if (queryInput.NextType == 0)
             {
-                query = query.Where(t => t.QuestionId < queryInput.CurrentQuestionId.Value).OrderByDescending(t => t.QuestionId).Take(1);
+                examQuestion = await query.FirstOrDefaultAsync();
+            }
+            //上一页
+            else if (queryInput.NextType == 1)
+            {
+                examQuestion = await query.Where(t => t.QuestionId > queryInput.CurrentQuestionId.Value).Take(1).LastOrDefaultAsync();
             }
             //下一页
             else
             {
-                query = query.Where(t => t.QuestionId > queryInput.CurrentQuestionId.Value).OrderByDescending(t => t.QuestionId).Take(1);
+                examQuestion = await query.Where(t => t.QuestionId < queryInput.CurrentQuestionId.Value).Take(1).FirstOrDefaultAsync();
             }
 
-            var examQuestion = await query.FirstOrDefaultAsync();
             if (examQuestion != null)
             {
                 var dto = ObjectMapper.Map<ExamQuestionAddOrUpdateInput>(examQuestion);
 
-                var items = _examQuestionItemRepository.QueryWhere(t => t.QuestionId == dto.QuestionId).ToListAsync();
+                var items = await _examQuestionItemRepository.QueryWhere(t => t.QuestionId == dto.QuestionId).ToListAsync();
 
                 dto.Items = ObjectMapper.Map<List<ExamQuestionItemDto>>(items);
 
@@ -304,7 +316,11 @@ namespace CodeRun.Services.Service.Implements.Web
             }
             else
             {
-                if (queryInput.Type == 0)
+                if (queryInput.NextType == 0)
+                {
+                    throw new BusinessException("数据不存在");
+                }
+                else if (queryInput.NextType == 1)
                     throw new BusinessException("已经是第一页了");
                 else
                     throw new BusinessException("已经是最后一页了");
@@ -316,13 +332,13 @@ namespace CodeRun.Services.Service.Implements.Web
         /// </summary>
         /// <param name="importDtos"></param>
         /// <returns></returns>
-        public async Task BatchImportExamQuestionAsync(List<ExamQuestionImportDto> importDtos)
+        public async Task<List<ImportDataErrorDto>> BatchImportExamQuestionAsync(List<ExamQuestionImportDto> importDtos)
         {
             var categoryNames = importDtos.Select(t => t.CategoryName).Distinct().ToList();
 
             var categories = await _categoryRepository.QueryWhere(t => categoryNames.Contains(t.CategoryName), false).ToListAsync();
 
-            Dictionary<int, List<string>> errorStr = new Dictionary<int, List<string>>();
+            List<ImportDataErrorDto> importDataErrorDtos = new List<ImportDataErrorDto>();
 
             List<ExamQuestion> examQuestions = new List<ExamQuestion>();
             List<ExamQuestionItem> examQuestionItems = new List<ExamQuestionItem>();
@@ -359,7 +375,11 @@ namespace CodeRun.Services.Service.Implements.Web
                 }
                 if (error.Count > 0)
                 {
-                    errorStr.Add(index, error);
+                    importDataErrorDtos.Add(new ImportDataErrorDto
+                    {
+                        RowNum = index,
+                        ErrorItemList = error
+                    });
                     continue;
                 }
                 //添加数据
@@ -392,16 +412,16 @@ namespace CodeRun.Services.Service.Implements.Web
                 }
             }
 
-            if (errorStr.Count > 0)
+            if (importDataErrorDtos.Count == 0)
             {
-                throw new BusinessException(errorStr!.ToString()!);
+                await _examQuestionRepository.AddAsync(examQuestions.ToArray());
+
+                await _examQuestionItemRepository.AddAsync(examQuestionItems.ToArray());
+
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            await _examQuestionRepository.AddAsync(examQuestions.ToArray());
-
-            await _examQuestionItemRepository.AddAsync(examQuestionItems.ToArray());
-
-            await _unitOfWork.SaveChangesAsync();
+            return importDataErrorDtos;
         }
     }
 }

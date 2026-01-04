@@ -35,9 +35,9 @@
         /// </summary>
         public long? CurrentQuestionId { get; set; }
         /// <summary>
-        /// 0-上一页,1-下一页
+        /// 0-当前页,1-上一页,2-下一页
         /// </summary>
-        public int Type { get; set; }
+        public int NextType { get; set; }
 
         /// <summary>
         /// 根据考题id查询

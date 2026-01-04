@@ -7,7 +7,7 @@
           {{ title[showType] }}
         </div>
         <div class="content">
-          <div class="title">{{ detailInfo.title }}</div>
+          <div class="title" v-if="showType == 1">{{ detailInfo.title }}</div>
           <div class="detail-info">
             <div class="dif">
               难度:<el-rate v-model="detailInfo.difficultyLevel" :disabled="true"></el-rate>
@@ -16,6 +16,34 @@
           </div>
           <div class="part-title">问题描述：</div>
           <div class="html-content" v-html="detailInfo.question || '暂无问题描述'"></div>
+
+          <!--考题题目选项-->
+          <template v-if="showType == 2">
+            <div class="part-title">题目类型：{{ question_type[detailInfo.questionType] }}</div>
+            <template v-if="detailInfo.questionType != 0">
+              <div class="part-title">问题选项：</div>
+              <div class="question-item-list">
+                <div class="question-item" v-for="(value, index) in detailInfo.items">
+                  {{ letter[index] }}、{{ value.title }}
+                </div>
+              </div>
+            </template>
+            <div class="part-title">
+              答案：
+              <template
+                v-if="detailInfo.questionType == 0"
+                style="margin-left: 5px; margin-top: 5px"
+              >
+                {{ detailInfo.questionAnswer == 1 ? '正确' : '错误' }}
+              </template>
+              <template v-else>
+                <span v-for="value in (detailInfo.questionAnswer?.split(',') || [])">
+                  {{ letter[value] }}
+                </span>
+              </template>
+            </div>
+          </template>
+
           <div class="part-title">答案解析：</div>
           <div class="html-content" v-html="detailInfo.answerAnalysis"></div>
         </div>
@@ -26,6 +54,7 @@
 </template>
 
 <script setup>
+import { question_type, letter } from '@/utils/Constants'
 import { ref, getCurrentInstance } from 'vue'
 import dayjs from 'dayjs'
 const { proxy } = getCurrentInstance()
@@ -52,7 +81,11 @@ const showWindow = ref(false)
 const detailInfo = ref({})
 const getDetail = async () => {
   let searchParams = Object.assign({}, params.value)
-  searchParams.currentQuestionInfoId = currentId.value
+  if (props.showType == 1) {
+    searchParams.currentQuestionInfoId = currentId.value
+  } else if (props.showType == 2) {
+    searchParams.currentQuestionId = currentId.value
+  }
   searchParams.nextType = nextType.value
 
   let result = await proxy.Request({
@@ -80,6 +113,7 @@ const open = (id, searchParams) => {
   showWindow.value = true
   currentId.value = id
   params.value = searchParams
+  nextType.value = 0
   getDetail()
   window.addEventListener('keyup', keyHandler, false)
 }

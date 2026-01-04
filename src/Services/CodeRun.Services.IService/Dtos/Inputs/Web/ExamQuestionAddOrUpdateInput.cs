@@ -14,7 +14,7 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// <summary>
         /// 标题
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
         /// <summary>
         /// 分类id
         /// </summary>
@@ -22,7 +22,7 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// <summary>
         /// 分类名称
         /// </summary>
-        public string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
         /// <summary>
         /// 难度等级
         /// </summary>
@@ -34,15 +34,15 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// <summary>
         /// 问题描述
         /// </summary>
-        public string Question { get; set; }
+        public string Question { get; set; } = null!;
         /// <summary>
         /// 答案
         /// </summary>
-        public string QuestionAnswer { get; set; }
+        public string QuestionAnswer { get; set; } = null!;
         /// <summary>
         /// 回答解释
         /// </summary>
-        public string AnswerAnalysis { get; set; }
+        public string? AnswerAnalysis { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -59,7 +59,7 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// <summary>
         /// 创建人名称
         /// </summary>
-        public string CreatedUserName { get; set; }
+        public string? CreatedUserName { get; set; }
         /// <summary>
         /// 0-内部 1-外部投稿
         /// </summary>
@@ -68,6 +68,6 @@ namespace CodeRun.Services.IService.Dtos.Inputs.Web
         /// <summary>
         /// 答案解析json
         /// </summary>
-        public List<ExamQuestionItemDto> Items { get; set; }
+        public List<ExamQuestionItemDto> Items { get; set; } = new List<ExamQuestionItemDto>();
     }
 }

@@ -16,7 +16,7 @@
         /// <summary>
         /// 标题
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
         /// <summary>
         /// 排序
         /// </summary>

@@ -51,7 +51,6 @@ const { proxy } = getCurrentInstance()
 
 const api = {
   QuestionInfoAddOrUpdate: '/QuestionInfo/QuestionInfoAddOrUpdate',
-  QuestionInfoById: '/QuestionInfo/QuestionInfoById/',
 }
 
 const dialogConfig = ref({

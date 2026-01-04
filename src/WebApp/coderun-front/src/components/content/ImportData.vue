@@ -18,6 +18,14 @@
       >
         <span class="iconfont icon-xiazai">下载模板</span>
       </a>
+      <a
+        :href="`/api/ExamQuestion/DownloadTemplate`"
+        v-if="text == '考题'"
+        class="a-link"
+        target="_blank"
+      >
+        <span class="iconfont icon-xiazai">下载模板</span>
+      </a>
     </div>
     <div class="setp">2、选择导入文件</div>
     <div class="content">
@@ -49,6 +57,7 @@ const props = defineProps({
 
 const api = {
   ImportQuestionInfo: '/QuestionInfo/ImportQuestionInfo',
+  ImportExamQuestionInfo: '/ExamQuestion/DownloadTemplate',
 }
 const dialogConfig = ref({
   title: '导入',
@@ -92,7 +101,7 @@ const importData = async (file) => {
     }
   } else {
     let result = await proxy.Request({
-      url: api.ImportQuestionInfo,
+      url: api.ImportExamQuestionInfo,
       method: 'post',
       params: {
         formFile: file,
