@@ -48,5 +48,16 @@ namespace CodeRun.Services.IService.Interfaces.Web
         /// <param name="queryInput"></param>
         /// <returns></returns>
         Task<List<ShareInfoDto>> LoadShareWhereListAsync(ShareInfoQueryInput queryInput);
+
+        /// <summary>
+        /// /// <summary>
+        /// 根据id查询数据
+        /// </summary>
+        /// <param name="shareId"></param>
+        /// <returns></returns>
+        /// </summary>
+        /// <param name="shareId"></param>
+        /// <returns></returns>
+        Task<ShareInfoAddOrUpdateInput> GetShareInfoByIdAsync(long shareId);
     }
 }

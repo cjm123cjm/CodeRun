@@ -4,6 +4,7 @@ using CodeRun.Services.AdminApi.CustomerPolicy;
 using CodeRun.Services.IService.Enums;
 using CodeRun.Services.IService.Interfaces.Web;
 using CodeRun.Services.IService.Dtos.Inputs.Web;
+using CodeRun.Services.Service.Implements.Web;
 
 namespace CodeRun.Services.AdminApi.Controllers
 {
@@ -25,9 +26,23 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.share_list)]
-        public async Task<ResponseDto> LoadShareInfoList(ShareInfoQueryInput queryInput)
+        public async Task<ResponseDto> LoadShareInfoList([FromQuery] ShareInfoQueryInput queryInput)
         {
             var data = await _shareInfoService.LoadShareInfoListAsync(queryInput);
+
+            return new ResponseDto(data);
+        }
+
+        /// <summary>
+        /// 根据id查询数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        [PermissionAuthorize(PermissionCodeEnum.share_list)]
+        public async Task<ResponseDto> ShareInfoById(long id)
+        {
+            var data = await _shareInfoService.GetShareInfoByIdAsync(id);
 
             return new ResponseDto(data);
         }
@@ -39,7 +54,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.share_edit)]
-        public async Task<ResponseDto> SaveShareInfo(ShareInfoAddOrUpdateInput input)
+        public async Task<ResponseDto> SaveShareInfo([FromBody] ShareInfoAddOrUpdateInput input)
         {
             await _shareInfoService.SaveShareInfoAsync(input);
 
@@ -53,7 +68,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.share_del)]
-        public async Task<ResponseDto> DeletedShareInfo(long shareIds)
+        public async Task<ResponseDto> DeletedShareInfo([FromBody] long shareIds)
         {
             await _shareInfoService.DeletedShareInfoAsync(shareIds.ToString());
 
@@ -66,8 +81,8 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <param name="shareIds">,号拼接</param>
         /// <returns></returns>
         [HttpPost]
-        [PermissionAuthorize(PermissionCodeEnum.share_del_batch)]
-        public async Task<ResponseDto> BatchDeletedShareInfo(long shareIds)
+        [PermissionAuthorize(PermissionCodeEnum.share_del)]
+        public async Task<ResponseDto> BatchDeletedShareInfo([FromBody] long shareIds)
         {
             await _shareInfoService.DeletedShareInfoAsync(shareIds.ToString());
 
@@ -82,7 +97,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.share_post)]
-        public async Task<ResponseDto> PostShareInfo(string shareIds)
+        public async Task<ResponseDto> PostShareInfo([FromBody] string shareIds)
         {
             await _shareInfoService.UpdateStatusShareInfoAsync(shareIds, 1);
 
@@ -97,7 +112,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.share_post)]
-        public async Task<ResponseDto> CancelShareInfo(string shareIds)
+        public async Task<ResponseDto> CancelShareInfo([FromBody] string shareIds)
         {
             await _shareInfoService.UpdateStatusShareInfoAsync(shareIds, 0);
 
@@ -112,7 +127,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <exception cref="NotImplementedException"></exception>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.share_list)]
-        public async Task<ResponseDto> ShowShareInfoDetailNext(ShareInfoQueryInput input)
+        public async Task<ResponseDto> ShowShareInfoDetailNext([FromQuery] ShareInfoQueryInput input)
         {
             var data = await _shareInfoService.ShowShareInfoDetailNextAsync(input);
 

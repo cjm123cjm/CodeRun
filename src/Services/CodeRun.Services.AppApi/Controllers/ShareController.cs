@@ -56,7 +56,7 @@ namespace CodeRun.Services.AppApi.Controllers
                 PageIndex = showNextDetail.PageIndex,
                 PageSize = showNextDetail.PageSize,
                 CurrentShareInfoId = showNextDetail.CurrentId,
-                Type = showNextDetail.Type,
+                NextType = showNextDetail.Type,
                 ReadCount = true
             });
 

@@ -49,7 +49,7 @@ namespace CodeRun.Services.Service.Implements.Web
             {
                 query = query.Where(t => queryInput.ShareIds.Contains(t.ShareId));
             }
-
+            query = query.OrderByDescending(t => t.ShareId);
             return query;
         }
 
@@ -80,8 +80,7 @@ namespace CodeRun.Services.Service.Implements.Web
 
             var totalCount = await query.CountAsync();
 
-            var shareInfoDtos = await query.OrderByDescending(t => t.ShareId)
-                                           .Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
+            var shareInfoDtos = await query.Skip((queryInput.PageIndex - 1) * queryInput.PageSize)
                                            .Take(queryInput.PageSize)
                                            .ProjectTo<ShareInfoDto>(ObjectMapper.ConfigurationProvider)
                                            .ToListAsync();
@@ -95,6 +94,17 @@ namespace CodeRun.Services.Service.Implements.Web
             };
         }
 
+        /// <summary>
+        /// 根据id查询数据
+        /// </summary>
+        /// <param name="shareId"></param>
+        /// <returns></returns>
+        public async Task<ShareInfoAddOrUpdateInput> GetShareInfoByIdAsync(long shareId)
+        {
+            var share = await _shareInfoRepository.GetByIdAsync(shareId);
+
+            return ObjectMapper.Map<ShareInfoAddOrUpdateInput>(share);
+        }
         /// <summary>
         /// 添加/修改
         /// </summary>
@@ -191,48 +201,49 @@ namespace CodeRun.Services.Service.Implements.Web
             }
             var query = SearchQuery(input);
 
+            ShareInfo? share = null;
             //上一页
-            if (input.Type == 1)
+            if (input.NextType == 1)
             {
-                query = query.Where(t => t.ShareId < input.CurrentShareInfoId.Value);
+                share = await query.Where(t => t.ShareId > input.CurrentShareInfoId.Value).LastOrDefaultAsync();
             }
             //下一页
-            else if (input.Type == 2)
+            else if (input.NextType == 2)
             {
-                query = query.Where(t => t.ShareId > input.CurrentShareInfoId.Value);
+                share = await query.Where(t => t.ShareId < input.CurrentShareInfoId.Value).FirstOrDefaultAsync();
             }
             //当前页
-            else if (input.Type == 3)
+            else if (input.NextType == 0)
             {
-                query = query.Where(t => t.ShareId == input.CurrentShareInfoId.Value);
+                share = await query.Where(t => t.ShareId == input.CurrentShareInfoId.Value).FirstOrDefaultAsync();
             }
             else
             {
                 throw new BusinessException("参数错误");
             }
 
-            var data = await query.OrderByDescending(t => t.ShareId).Take(1).FirstOrDefaultAsync();
-
-            if (data == null)
+            if (share == null)
             {
-                if (input.Type == 1)
+                if (input.NextType == 1)
                     throw new BusinessException("已经是第一页了");
-                else if (input.Type == 2)
+                else if (input.NextType == 2)
                     throw new BusinessException("已经是最后一页了");
+                else if (input.NextType == 0)
+                    throw new BusinessException("数据不存在");
                 else
                     throw new BusinessException("参数不存在");
             }
 
             if (input.ReadCount)
             {
-                data.ReadCount++;
+                share.ReadCount++;
 
-                _shareInfoRepository.Update(data);
+                _shareInfoRepository.Update(share);
 
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            return ObjectMapper.Map<ShareInfoAddOrUpdateInput>(data);
+            return ObjectMapper.Map<ShareInfoAddOrUpdateInput>(share);
         }
     }
 }

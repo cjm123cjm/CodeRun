@@ -78,6 +78,9 @@ namespace CodeRun.Services.AdminApi.Controllers
                 case 0:
                     uploadFolder = Path.Combine(_folderPath.Value.PhysicalPath, "分类管理");
                     break;
+                case 1:
+                    uploadFolder = Path.Combine(_folderPath.Value.PhysicalPath, "经验分享");
+                    break;
                 default:
                     uploadFolder = Path.Combine(_folderPath.Value.PhysicalPath, month);
                     break;
@@ -103,7 +106,7 @@ namespace CodeRun.Services.AdminApi.Controllers
             return new ResponseDto
             {
                 IsSuccess = true,
-                Result = formFile.Type == 0 ? "分类管理/" + fileName : month + "/" + fileName
+                Result = formFile.Type == 0 ? "分类管理/" + fileName : formFile.Type == 1 ? "经验分享/" + fileName : month + "/" + fileName
             };
         }
     }

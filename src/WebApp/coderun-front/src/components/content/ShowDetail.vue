@@ -6,7 +6,7 @@
         <div class="header">
           {{ title[showType] }}
         </div>
-        <div class="content">
+        <div class="content" v-if="showType != 3">
           <div class="title" v-if="showType == 1">{{ detailInfo.title }}</div>
           <div class="detail-info">
             <div class="dif">
@@ -37,7 +37,7 @@
                 {{ detailInfo.questionAnswer == 1 ? '正确' : '错误' }}
               </template>
               <template v-else>
-                <span v-for="value in (detailInfo.questionAnswer?.split(',') || [])">
+                <span v-for="value in detailInfo.questionAnswer?.split(',') || []">
                   {{ letter[value] }}
                 </span>
               </template>
@@ -46,6 +46,34 @@
 
           <div class="part-title">答案解析：</div>
           <div class="html-content" v-html="detailInfo.answerAnalysis"></div>
+        </div>
+
+        <!--经验分享-->
+        <div class="content" v-else>
+          <div class="share-title">{{ detailInfo.title }}</div>
+
+          <div class="detail-info">
+            <div class="share-dif">
+              更新：{{ dayjs(detailInfo.createdTime).format('YYYY-MM-DD HH:mm:ss') }}
+            </div>
+          </div>
+          <div class="detail-info" style="margin-top: 10px">
+            <Cover
+              v-if="detailInfo.coverType == 1"
+              :width="200"
+              :height="100"
+              :cover="detailInfo.coverPath"
+            ></Cover>
+            <Cover
+              v-if="detailInfo.coverType == 2"
+              :width="100"
+              :height="100"
+              :cover="detailInfo.coverPath"
+            ></Cover>
+          </div>
+
+          <div class="part-title">内容：</div>
+          <div class="html-content" v-html="detailInfo.content"></div>
         </div>
       </div>
       <div class="iconfont icon-xiayiye" @click="nextAndPre(2)"></div>
@@ -57,6 +85,7 @@
 import { question_type, letter } from '@/utils/Constants'
 import { ref, getCurrentInstance } from 'vue'
 import dayjs from 'dayjs'
+import Cover from '../Cover.vue'
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
@@ -85,6 +114,8 @@ const getDetail = async () => {
     searchParams.currentQuestionInfoId = currentId.value
   } else if (props.showType == 2) {
     searchParams.currentQuestionId = currentId.value
+  } else if (props.showType == 3) {
+    searchParams.currentShareInfoId = currentId.value
   }
   searchParams.nextType = nextType.value
 
@@ -184,6 +215,11 @@ defineExpose({
           display: flex;
           align-items: center;
         }
+        .share-dif {
+          display: flex;
+          align-items: center;
+          margin-top: 5px;
+        }
       }
       .part-title {
         margin-top: 10px;
@@ -211,6 +247,11 @@ defineExpose({
         .question-item {
           margin-top: 5px;
         }
+      }
+
+      .share-title {
+        font-weight: bold;
+        font-size: 18px;
       }
     }
   }

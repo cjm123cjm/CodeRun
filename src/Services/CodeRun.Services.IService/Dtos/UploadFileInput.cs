@@ -12,7 +12,7 @@ namespace CodeRun.Services.IService.Dtos
         /// </summary>
         public IFormFile File { get; set; } = null!;
         /// <summary>
-        /// 类型
+        /// 类型:0-分类管理图片,1-分享图片
         /// </summary>
         public int Type { get; set; }
     }

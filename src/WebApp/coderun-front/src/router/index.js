@@ -49,6 +49,11 @@ const router = createRouter({
           name: '考题管理',
           component: () => import('@/views/content/ExamQuestionList.vue'),
         },
+        {
+          path: '/content/share',
+          name: '经验分享',
+          component: () => import('@/views/content/ShareList.vue'),
+        },
       ],
     },
   ],

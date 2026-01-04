@@ -35,7 +35,6 @@ const PermissionCodes = {
     edit: 'share_edit',
     post: 'share_post',
     del: 'share_del',
-    batchDel: 'share_del_batch',
   },
   app: {
     edit: 'app_update_edit',
