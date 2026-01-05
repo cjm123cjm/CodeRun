@@ -54,6 +54,11 @@ const router = createRouter({
           name: '经验分享',
           component: () => import('@/views/content/ShareList.vue'),
         },
+        {
+          path: '/app/userDevice',
+          name: '设备管理',
+          component: () => import('@/views/app/UserDeviceList.vue'),
+        },
       ],
     },
   ],

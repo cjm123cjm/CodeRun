@@ -27,7 +27,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.app_device_list)]
-        public async Task<ResponseDto> LoadAppDeviceList(AppDeviceQueryInput queryInput)
+        public async Task<ResponseDto> LoadAppDeviceList([FromQuery] AppDeviceQueryInput queryInput)
         {
             var data = await _appDeviceService.LoadAppDeviceListAsync(queryInput);
 
