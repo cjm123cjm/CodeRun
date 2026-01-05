@@ -59,6 +59,16 @@ const router = createRouter({
           name: '设备管理',
           component: () => import('@/views/app/UserDeviceList.vue'),
         },
+        {
+          path: '/app/user',
+          name: '用户管理',
+          component: () => import('@/views/app/AppUserList.vue'),
+        },
+        {
+          path: '/app/carouselList',
+          name: '轮播图',
+          component: () => import('@/views/app/CarouselList.vue'),
+        },
       ],
     },
   ],

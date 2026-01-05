@@ -25,7 +25,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.app_user_list)]
-        public async Task<ResponseDto> LoadAppUserInfoList(AppUserInfoQueryInput queryInput)
+        public async Task<ResponseDto> LoadAppUserInfoList([FromQuery] AppUserInfoQueryInput queryInput)
         {
             var data = await _appUserInfoService.LoadAppUserInfoListAsync(queryInput);
 
@@ -39,7 +39,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_user_edit)]
-        public async Task<ResponseDto> UpdateStatusAppUserInfo(UpdateStatusAppUserInput update)
+        public async Task<ResponseDto> UpdateStatusAppUserInfo([FromBody] UpdateStatusAppUserInput update)
         {
             await _appUserInfoService.UpdateStatusAppUserInfoAsync(update);
 
