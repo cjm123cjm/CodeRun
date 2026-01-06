@@ -38,7 +38,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_carousel_edit)]
-        public async Task<ResponseDto> SaveAppCarousel(AppCarouselAddOrUpdateInput appCarousel)
+        public async Task<ResponseDto> SaveAppCarousel([FromBody]AppCarouselAddOrUpdateInput appCarousel)
         {
             await _appCarouselService.SaveAppCarouselAsync(appCarousel);
 
@@ -52,7 +52,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_carousel_edit)]
-        public async Task<ResponseDto> DeletedAppCarousel(long carouselId)
+        public async Task<ResponseDto> DeletedAppCarousel([FromBody] long carouselId)
         {
             await _appCarouselService.DeletedAppCarouselAsync(carouselId);
 
@@ -66,7 +66,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_carousel_edit)]
-        public async Task<ResponseDto> ChangeAppCarouselSort(string carouselIds)
+        public async Task<ResponseDto> ChangeAppCarouselSort([FromBody] string carouselIds)
         {
             await _appCarouselService.ChangeAppCarouselSortAsync(carouselIds);
 

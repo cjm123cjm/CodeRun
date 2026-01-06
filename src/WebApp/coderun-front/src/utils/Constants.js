@@ -33,4 +33,11 @@ const letter = [
   'Z',
 ]
 
-export { question_type, letter }
+const ObjectType = {
+  0: '分享',
+  1: '问题',
+  2: '考题',
+  3: '外部链接',
+}
+
+export { question_type, letter, ObjectType }

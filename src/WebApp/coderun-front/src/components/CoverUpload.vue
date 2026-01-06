@@ -37,7 +37,7 @@ const props = defineProps({
     default: 100,
   },
   type: {
-    type: String,
+    type: Number, //0-分类,1-经验,2-轮播图
   },
 })
 

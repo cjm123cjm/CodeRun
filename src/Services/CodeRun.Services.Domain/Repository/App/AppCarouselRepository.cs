@@ -12,9 +12,10 @@ namespace CodeRun.Services.Domain.Repository.App
         {
         }
 
-        public Task<int> MaxSortAsync()
+        public async Task<int> MaxSortAsync()
         {
-            return Query().AsNoTracking().MaxAsync(t => t.Sort);
+            int count = await Query().AsNoTracking().CountAsync();
+            return count == 0 ? 0 : (await Query().AsNoTracking().MaxAsync(t => t.Sort));
         }
     }
 }

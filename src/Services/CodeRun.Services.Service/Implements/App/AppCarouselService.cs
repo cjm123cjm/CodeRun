@@ -93,8 +93,13 @@ namespace CodeRun.Services.Service.Implements.App
 
             var carousels = await _appCarouselRepository.QueryWhere(t => carouselLongId.Contains(t.CarouselId), true).ToListAsync();
 
+            // 按照ids中的顺序排序
+            var sortedCategories = carousels
+                .OrderBy(c => carouselLongId.IndexOf(c.CarouselId))
+                .ToList();
+
             int index = 1;
-            foreach (var item in carousels)
+            foreach (var item in sortedCategories)
             {
                 item.Sort = index;
                 index++;
