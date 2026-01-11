@@ -3,7 +3,7 @@
     <el-card>
       <el-form :model="searchForm" label-width="70px" label-position="right">
         <el-row>
-          <el-col :span="5">
+          <el-col :span="6">
             <el-form-item label="发布日期">
               <el-date-picker
                 v-model="searchForm.postTimeRange"
@@ -18,27 +18,11 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="5">
-            <el-form-item label="状态" label-width="60px">
-              <el-select v-model="searchForm.status" placeholder="请选择难度" clearable>
-                <el-option label="未回复" :value="1"></el-option>
-                <el-option label="已回复" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="5">
-            <el-form-item label="创建人">
-              <el-input
-                v-model="searchForm.userName"
-                clearable
-                placeholder="请输入设备id"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-
           <el-col :span="4" :style="{ paddingLeft: '10px' }">
             <el-button type="success" @click="loadDataList">查询</el-button>
+            <el-button type="primary" v-has="proxy.PermissionCodes.app.edit" @click="addUpdate"
+              >发布版本</el-button
+            >
           </el-col>
         </el-row>
       </el-form>
@@ -59,36 +43,64 @@
       <template #createdTimeSlot="{ index, row }">
         {{ dayjs(row.createdTime).format('YYYY-MM-DD HH:mm:ss') }}
       </template>
-      <template #statusSlot="{ index, row }">
-        <Badge :showType="green" :text="已回复" v-if="row.status == 1"></Badge>
-        <Badge :showType="orgin" :text="未回复" v-else></Badge>
+      <template #updateDescSlot="{ index, row }">
+        <div v-for="(item, num) in row.updateDescList">{{ num + 1 }}、{{ item }}</div>
       </template>
+
+      <template #updateTypeSlot="{ index, row }">
+        <div v-if="row.updateType == 0">全更新</div>
+        <div v-if="row.updateType == 1">局部更新</div>
+      </template>
+
+      <template #statusSlot="{ index, row }">
+        <Badge showType="red" text="未发布" v-if="row.status == 0"></Badge>
+        <Badge showType="yellow" text="灰度发布" v-if="row.status == 1"></Badge>
+        <Badge showType="green" text="全网发布" v-if="row.status == 2"></Badge>
+      </template>
+
       <template #operation="{ index, row }">
         <div class="row-op-panel">
           <a
             class="a-link"
             href="javascript:void(0)"
-            @click.prevent="replay(row)"
-            v-has="proxy.PermissionCodes.feedback.replay"
-            v-if="row.status == 0"
-            >回复</a
+            @click.prevent="editUpdate(row)"
+            v-has="proxy.PermissionCodes.app.edit"
+            >修改</a
+          >
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click.prevent="delUpdate(row)"
+            v-has="proxy.PermissionCodes.app.edit"
+            >删除</a
+          >
+          <a
+            class="a-link"
+            href="javascript:void(0)"
+            @click.prevent="postUpdate(row)"
+            v-has="proxy.PermissionCodes.app.post"
+            >发布</a
           >
         </div>
       </template>
     </Table>
   </el-card>
-  <FeedbackReplay @reload="loadDataList" ref="feedbackReplayRef"></FeedbackReplay>
+  <UpdateEdit ref="updateEditRef" @reload="loadDataList"></UpdateEdit>
+  <UpdatePost ref="updatePostRef" @reload="loadDataList"></UpdatePost>
 </template>
 
 <script setup>
-import FeedbackReplay from './FeedbackReplay.vue'
+import UpdateEdit from './UpdateEdit.vue'
+import UpdatePost from './UpdatePost.vue'
 import dayjs from 'dayjs'
 import Badge from '@/components/Badge.vue'
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 
 const api = {
-  LoadFeedbackList: '/AppFeedback/LoadFeedbackList',
+  LoadAppUpdateList: '/AppUpdate/LoadAppUpdateList',
+  DeletedAppUpdate: '/AppUpdate/DeletedAppUpdate',
+  PostUpdate: '/AppUpdate/PostUpdate',
 }
 
 const searchForm = ref({})
@@ -101,21 +113,21 @@ const tableOptions = ref({
   extHeight: 125,
 })
 
-//加载反馈列表
+//加载发布列表
 const loadDataList = async () => {
   let params = {
     pageIndex: tableData.value.pageIndex,
     pageSize: tableData.value.pageSize,
   }
   Object.assign(params, searchForm.value)
-  if (searchForm.value.createdTimeRange) {
-    params.feedbackStartTime = searchForm.value.createdTimeRange[0]
-    params.feedbackEndTime = searchForm.value.createdTimeRange[1]
+  if (searchForm.value.postTimeRange) {
+    params.pulishStartTime = searchForm.value.postTimeRange[0]
+    params.pulishEndTime = searchForm.value.postTimeRange[1]
   }
-  delete params.createdTimeRange
+  delete params.postTimeRange
 
   const result = await proxy.Request({
-    url: api.LoadFeedbackList,
+    url: api.LoadAppUpdateList,
     method: 'get',
     dataType: 'json',
     params: params,
@@ -127,33 +139,64 @@ const loadDataList = async () => {
 
 const columns = [
   {
-    label: '问题',
-    prop: 'content',
+    label: '版本',
+    prop: 'version',
   },
   {
-    label: '昵称',
-    prop: 'nickName',
+    label: '更新内容',
+    prop: 'updateDesc',
+    scopedSlots: 'updateDescSlot',
   },
   {
-    label: '回复状态',
-    prop: 'status',
-    scopedSlots: 'statusSlot',
-  },
-  {
-    label: '创建时间',
+    label: '发布时间',
     prop: 'createdTime',
     scopedSlots: 'createdTimeSlot',
   },
   {
+    label: '更新类型',
+    prop: 'updateType',
+    scopedSlots: 'updateTypeSlot',
+  },
+  {
+    label: '状态',
+    prop: 'status',
+    scopedSlots: 'statusSlot',
+  },
+  {
     label: '操作',
-    width: 100,
+    width: 150,
     scopedSlots: 'operation',
   },
 ]
 
-const feedbackReplayRef = ref()
-const replay = (data) => {
-  feedbackReplayRef.value.open(data)
+const updateEditRef = ref()
+//新增
+const addUpdate = () => {
+  updateEditRef.value.open({})
+}
+//修改
+const editUpdate = (row) => {
+  updateEditRef.value.open(row)
+}
+//删除
+const delUpdate = (row) => {
+  proxy.Confirm(`确定删除版本号为【${row.version}】更新数据吗?`, async () => {
+    let result = await proxy.Request({
+      url: api.DeletedAppUpdate,
+      dataType: 'json',
+      method: 'post',
+      params: row.id,
+    })
+    if (!result) return
+    proxy.Message.success('删除成功')
+    loadDataList()
+  })
+}
+
+const updatePostRef = ref()
+//发布
+const postUpdate = (row) => {
+  updatePostRef.value.open(row)
 }
 </script>
 

@@ -7,6 +7,9 @@ using CodeRun.Services.IService.Enums;
 
 namespace CodeRun.Services.AdminApi.Controllers
 {
+    /// <summary>
+    /// app发布
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AppUpdateController : ControllerBase
@@ -25,7 +28,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.app_update_list)]
-        public async Task<ResponseDto> LoadAppUpdateList(AppUpdateQueryInput queryInput)
+        public async Task<ResponseDto> LoadAppUpdateList([FromQuery] AppUpdateQueryInput queryInput)
         {
             var data = await _updateService.LoadAppUpdateListAsync(queryInput);
 
@@ -39,7 +42,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_update_edit)]
-        public async Task<ResponseDto> SaveAppUpdate(AppUpdateAddOrUpdateInput addOrUpdateInput)
+        public async Task<ResponseDto> SaveAppUpdate([FromForm] AppUpdateAddOrUpdateInput addOrUpdateInput)
         {
             await _updateService.SaveAppUpdateAsync(addOrUpdateInput);
 
@@ -53,7 +56,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_update_edit)]
-        public async Task<ResponseDto> DeletedAppUpdate(long addUpdateId)
+        public async Task<ResponseDto> DeletedAppUpdate([FromBody] long addUpdateId)
         {
             await _updateService.DeletedAppUpdateAsync(addUpdateId);
 
@@ -67,7 +70,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_update_post)]
-        public async Task<ResponseDto> PostUpdate(PostAppUpdateInput updateInput)
+        public async Task<ResponseDto> PostUpdate([FromBody] PostAppUpdateInput updateInput)
         {
             await _updateService.PostUpdateAsync(updateInput);
 

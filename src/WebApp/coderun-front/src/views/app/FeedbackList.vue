@@ -61,7 +61,7 @@
       </template>
       <template #statusSlot="{ index, row }">
         <Badge :showType="green" :text="已回复" v-if="row.status == 1"></Badge>
-        <Badge :showType="orgin" :text="未回复" v-else></Badge>
+        <Badge :showType="red" :text="未回复" v-else></Badge>
       </template>
       <template #operation="{ index, row }">
         <div class="row-op-panel">

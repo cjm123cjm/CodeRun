@@ -11,6 +11,13 @@
         /// 更新描述
         /// </summary>
         public string UpdateDesc { get; set; } = null!;
+        public List<string> UpdateDescList
+        {
+            get
+            {
+                return UpdateDesc.Split('|').ToList();
+            }
+        }
         /// <summary>
         /// 更新类型:0-全更新,1-局部热更新,2-全网发布
         /// </summary>

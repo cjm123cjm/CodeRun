@@ -68,7 +68,7 @@ namespace CodeRun.Services.Service.Implements.App
             if (lastUpdate != null)
             {
                 long dbVesrion = Convert.ToInt64(lastUpdate.Version.Replace(".", ""));
-                long currentVesrion = Convert.ToInt64(lastUpdate.Version.Replace(".", ""));
+                long currentVesrion = Convert.ToInt64(addOrUpdateInput.Version.Replace(".", ""));
                 if (addOrUpdateInput.Id == 0 && currentVesrion <= dbVesrion)
                 {
                     throw new BusinessException("当前版本必须大于历史版本");
@@ -99,7 +99,7 @@ namespace CodeRun.Services.Service.Implements.App
             {
                 //E:\\coderun\\upload\\id+status
                 var path = Path.Combine(FolderPath.PhysicalPath, Constants.APP_UPLOAD_FOLDER, addOrUpdateInput.Id + "_" + addOrUpdateInput.Status);
-                if (Directory.Exists(path))
+                if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
@@ -149,7 +149,7 @@ namespace CodeRun.Services.Service.Implements.App
             {
                 throw new BusinessException("参数错误");
             }
-            if (updateInput.Status == 1 && !string.IsNullOrWhiteSpace(updateInput.GrayscaleDevice))
+            if (updateInput.Status == 1 && string.IsNullOrWhiteSpace(updateInput.GrayscaleDevice))
             {
                 throw new BusinessException("参数错误");
             }

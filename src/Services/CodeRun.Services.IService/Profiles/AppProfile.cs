@@ -17,6 +17,8 @@ namespace CodeRun.Services.IService.Profiles
         {
             CreateMap<AppCarousel, AppCarouselAddOrUpdateInput>().ReverseMap();
             CreateMap<AppCarouselDto, AppCarousel>().ReverseMap();
+            CreateMap<AppUpdate,AppUpdateDto>().ReverseMap();
+            CreateMap<AppUpdateAddOrUpdateInput,AppUpdate>().ReverseMap();
         }
     }
 }

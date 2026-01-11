@@ -31,7 +31,7 @@ const router = createRouter({
         },
         {
           path: '/setting/user',
-          name: '用户管理',
+          name: '系统用户',
           component: () => import('@/views/setting/UserList.vue'),
         },
         {
