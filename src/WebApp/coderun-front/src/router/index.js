@@ -69,6 +69,16 @@ const router = createRouter({
           name: '轮播图',
           component: () => import('@/views/app/CarouselList.vue'),
         },
+        {
+          path: '/app/feedbackList',
+          name: '问题反馈',
+          component: () => import('@/views/app/FeedbackList.vue'),
+        },
+        {
+          path: '/app/updateList',
+          name: 'App发布',
+          component: () => import('@/views/app/UpdateList.vue'),
+        },
       ],
     },
   ],

@@ -25,7 +25,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [PermissionAuthorize(PermissionCodeEnum.app_carousel_list)]
-        public async Task<ResponseDto> LoadFeedbackList(FeedbackQueryInput queryInput)
+        public async Task<ResponseDto> LoadFeedbackList([FromQuery] FeedbackQueryInput queryInput)
         {
             var data = await _feedbackService.LoadFeedbackListAsync(queryInput);
 
@@ -35,11 +35,11 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <summary>
         /// 加载详情反馈信息
         /// </summary>
-        /// <param name="queryInput"></param>
+        /// <param name="feedback"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{feedback}")]
         [PermissionAuthorize(PermissionCodeEnum.app_feedback_list)]
-        public async Task<ResponseDto> FeedbackDetailAsync(long feedback)
+        public async Task<ResponseDto> FeedbackDetailAsync([FromBody] long feedback)
         {
             var data = await _feedbackService.FeedbackDetailAsync(feedback);
 
@@ -53,7 +53,7 @@ namespace CodeRun.Services.AdminApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [PermissionAuthorize(PermissionCodeEnum.app_feedback_replay)]
-        public async Task<ResponseDto> ReplayFeedback(ReplayFeedbackInput replayFeedbackInput)
+        public async Task<ResponseDto> ReplayFeedback([FromBody] ReplayFeedbackInput replayFeedbackInput)
         {
             replayFeedbackInput.UserId = null;
 
