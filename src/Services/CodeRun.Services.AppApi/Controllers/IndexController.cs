@@ -47,7 +47,7 @@ namespace CodeRun.Services.AppApi.Controllers
         [HttpGet]
         public async Task<ResponseDto> LoadCarousel()
         {
-            var data = await _categoryService.LoadCategoryListByTypeAsync(0);
+            var data = await _carouselService.LoadAppCarouselListAsync();
 
             return new ResponseDto(data);
         }
