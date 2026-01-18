@@ -1,0 +1,109 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/exam/ExamIndex",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},
+		{
+			"path": "pages/question/QuestionIndex",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},
+		{
+			"path": "pages/share/ShareIndex",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},
+		{
+			"path": "pages/my/MyIndex",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#494949",
+		"selectedColor": "#8f60df",
+		"backgroundColor": "#fff",
+		"iconfontSrc": "/static/icon/iconfont.ttf",
+		"height": "60px",
+		"borderStyle": "black",
+		"list": [
+			{
+				"pagePath": "pages/index",
+				"text": "首页",
+				"color":"#494949",
+				"iconfont": {
+					"text": "\ue7c6",
+					"selectedText": "\ue7c6",
+					"fontSize": "22px",
+					"color": "#494949",
+					"selectedColor": "#8f60df"
+				}
+			},
+			{
+				"pagePath": "pages/question/QuestionIndex",
+				"text": "八股文",
+				"iconfont": {
+					"text": "\ue653",
+					"selectedText": "\ue653",
+					"fontSize": "22px",
+					"color": "#494949",
+					"selectedColor": "#8f60df"
+				}
+			},
+			{
+				"pagePath": "pages/exam/ExamIndex",
+				"text": "在线考题",
+				"iconfont": {
+					"text": "\ueb09",
+					"selectedText": "\ueb09",
+					"fontSize": "22px",
+					"color": "#494949",
+					"selectedColor": "#8f60df"
+				}
+			},
+			{
+				"pagePath": "pages/share/ShareIndex",
+				"text": "经验分享",
+				"iconfont": {
+					"text": "\ue729",
+					"selectedText": "\ue729",
+					"fontSize": "22px",
+					"color": "#494949",
+					"selectedColor": "#8f60df"
+				}
+			},
+			{
+				"pagePath": "pages/my/MyIndex",
+				"text": "我的",
+				"iconfont": {
+					"text": "\ue78b",
+					"selectedText": "\ue78b",
+					"fontSize": "22px",
+					"color": "#494949",
+					"selectedColor": "#8f60df"
+				}
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"app-plus":{
+			"bounce":"none"
+		}
+	}
+}

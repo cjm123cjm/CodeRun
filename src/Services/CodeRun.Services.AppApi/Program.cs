@@ -99,6 +99,12 @@ builder.Host.UseSerilog((context, logger) =>
 var folderPathOption = builder.Configuration.GetSection("FolderPath");
 builder.Services.Configure<FolderPath>(folderPathOption);
 
+//AutoMapper
+builder.Services.AddAutoMapper(p =>
+{
+    p.AddMaps("CodeRun.Services.IService");
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

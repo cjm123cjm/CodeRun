@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using CodeRun.Services.Domain.IRepository.Web;
 using CodeRun.Services.Domain.Repository.Web;
+using CodeRun.Services.Domain.UnitOfWork;
 using CodeRun.Services.IService.Interfaces.Web;
 using CodeRun.Services.Service.Implements.Web;
 using System.Reflection;
@@ -13,6 +14,12 @@ namespace CodeRun.Services.AppApi.Extensions
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<JwtTokenGenerator>().As<IJwtTokenGenerator>();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
+
+            // 注册 Logger（如果需要）
+            builder.RegisterGeneric(typeof(Logger<>))
+                   .As(typeof(ILogger<>))
+                   .SingleInstance();
 
             var aopType = new List<Type> { typeof(ServiceAop) };
             builder.RegisterType<ServiceAop>();

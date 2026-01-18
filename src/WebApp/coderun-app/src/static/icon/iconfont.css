@@ -1,0 +1,147 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 5107902 */
+  src: url('iconfont.woff2?t=1768139702291') format('woff2'),
+       url('iconfont.woff?t=1768139702291') format('woff'),
+       url('iconfont.ttf?t=1768139702291') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fenlei:before {
+  content: "\e600";
+}
+
+.icon-my:before {
+  content: "\e78b";
+}
+
+.icon-share:before {
+  content: "\e655";
+}
+
+.icon-i-more:before {
+  content: "\e609";
+}
+
+.icon-notes:before {
+  content: "\e653";
+}
+
+.icon-ok:before {
+  content: "\e63c";
+}
+
+.icon-wenti:before {
+  content: "\e689";
+}
+
+.icon-logout:before {
+  content: "\e78c";
+}
+
+.icon-eye:before {
+  content: "\e78f";
+}
+
+.icon-home:before {
+  content: "\e7c6";
+}
+
+.icon-backleft:before {
+  content: "\e654";
+}
+
+.icon-share1:before {
+  content: "\e729";
+}
+
+.icon-woman:before {
+  content: "\e764";
+}
+
+.icon-tiku:before {
+  content: "\e6a0";
+}
+
+.icon-Update:before {
+  content: "\e6c4";
+}
+
+.icon-24gf-paperPlane:before {
+  content: "\e967";
+}
+
+.icon-arrow-clock-right:before {
+  content: "\e603";
+}
+
+.icon-weimingming:before {
+  content: "\e601";
+}
+
+.icon-icon_error:before {
+  content: "\e651";
+}
+
+.icon-back-right-b:before {
+  content: "\e668";
+}
+
+.icon-man:before {
+  content: "\e863";
+}
+
+.icon-User:before {
+  content: "\e633";
+}
+
+.icon-shoucang:before {
+  content: "\e60a";
+}
+
+.icon-Edit:before {
+  content: "\e614";
+}
+
+.icon-icon_more:before {
+  content: "\e675";
+}
+
+.icon-shoucang1:before {
+  content: "\e665";
+}
+
+.icon-a-164:before {
+  content: "\ea87";
+}
+
+.icon-email-fill:before {
+  content: "\e856";
+}
+
+.icon-kaoshi:before {
+  content: "\eb09";
+}
+
+.icon-zaixiankaoshi:before {
+  content: "\e659";
+}
+
+.icon-search:before {
+  content: "\e626";
+}
+
+.icon-tips_wrong_fill:before {
+  content: "\e61d";
+}
+
+.icon-exchange:before {
+  content: "\e81d";
+}
+

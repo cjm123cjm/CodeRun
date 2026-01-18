@@ -31,10 +31,9 @@ namespace CodeRun.Services.AppApi.Controllers
         /// <summary>
         /// 获取所有分类
         /// </summary>
-        /// <param name="type"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ResponseDto> LoadAllCategory(int type)
+        public async Task<ResponseDto> LoadAllCategory()
         {
             var data = await _categoryService.LoadCategoryListByTypeAsync(0);
 
@@ -44,7 +43,6 @@ namespace CodeRun.Services.AppApi.Controllers
         /// <summary>
         /// 获取轮播图
         /// </summary>
-        /// <param name="type"></param>
         /// <returns></returns>
         [HttpGet]
         public async Task<ResponseDto> LoadCarousel()
